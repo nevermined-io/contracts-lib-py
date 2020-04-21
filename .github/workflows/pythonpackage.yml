@@ -37,12 +37,12 @@ jobs:
           [ -f "${HOME}/.nevermind/nvermind-contracts/artifacts/ready" ] && break
         done
         ls -la "${HOME}/.nevermind/nevermind-contracts/artifacts/"
-        export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
-        export PARITY_PASSWORD=node0
-        export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
         ./scripts/wait_for_migration_and_extract_keeper_artifacts.sh
     - name: Install dependencies
       run: |
+        export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
+        export PARITY_PASSWORD=node0
+        export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
         python -m pip install --upgrade pip
         pip install -r requirements_dev.txt
     - name: Test with pytest
