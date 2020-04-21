@@ -23,12 +23,15 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Configure nevermind-tools
+    - name: Install dependencies
       run: |
         git clone https://github.com/keyko-io/nevermind-tools
         cd nevermind-tools
         export KEEPER_VERSION=latest
         export AQUARIUS_VERSION=latest
+        export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
+        export PARITY_PASSWORD=node0
+        export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
         rm -rf "${HOME}/.nevermind/nevermind-contracts/artifacts"
         bash -x start_nevermind.sh --no-pleuston --no-commons --no-events-handler --no-brizo  --no-secret-store --no-faucet --no-dashboard --no-acl-contract --no-agent --latest 2>&1 > start_nevermind.log &
         cd ..
@@ -38,11 +41,6 @@ jobs:
         done
         ls -la "${HOME}/.nevermind/nevermind-contracts/artifacts/"
         ./scripts/wait_for_migration_and_extract_keeper_artifacts.sh
-    - name: Install dependencies
-      run: |
-        export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
-        export PARITY_PASSWORD=node0
-        export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
         python -m pip install --upgrade pip
         pip install -r requirements_dev.txt
     - name: Test with pytest
