@@ -20,7 +20,7 @@ with open('CHANGELOG.md') as history_file:
 # Installed by pip install ocean-utils
 # or pip install -e .
 install_requirements = [
-    'nevermind-contracts',
+    'nevermind-contracts==0.1.0',
     'web3==4.5.0',
     'requests==2.21.0',
 ]
@@ -85,6 +85,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/keyko-io/contracts-lib-py',
-    version='0.0.2',
+    version='0.1.0',
     zip_safe=False,
 )

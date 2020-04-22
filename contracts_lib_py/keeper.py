@@ -25,7 +25,7 @@ from contracts_lib_py.templates.compute_execution_template import EscrowComputeE
 from contracts_lib_py.templates.template_manager import TemplateStoreManager
 from contracts_lib_py.token import Token
 from contracts_lib_py.utils import (add_ethereum_prefix_and_hash_msg, generate_multi_value_hash,
-                                    split_signature)
+                                split_signature)
 from contracts_lib_py.wallet import Wallet
 from contracts_lib_py.web3.signature import SignatureFix
 from contracts_lib_py.web3_provider import Web3Provider
@@ -66,8 +66,8 @@ class Keeper(object):
         self.token = Token.get_instance()
         self.did_registry = DIDRegistry.get_instance()
         self.template_manager = TemplateStoreManager.get_instance()
-        # self.escrow_access_secretstore_template = EscrowAccessSecretStoreTemplate.get_instance()
-        # self.escrow_compute_execution_template = EscrowComputeExecutionTemplate.get_instance()
+        self.escrow_access_secretstore_template = EscrowAccessSecretStoreTemplate.get_instance()
+        self.escrow_compute_execution_template = EscrowComputeExecutionTemplate.get_instance()
         self.agreement_manager = AgreementStoreManager.get_instance()
         self.condition_manager = ConditionStoreManager.get_instance()
         self.sign_condition = SignCondition.get_instance()
@@ -82,8 +82,8 @@ class Keeper(object):
             self.token,
             self.did_registry,
             self.template_manager,
-            # self.escrow_access_secretstore_template,
-            # self.escrow_compute_execution_template,
+            self.escrow_access_secretstore_template,
+            self.escrow_compute_execution_template,
             self.agreement_manager,
             self.condition_manager,
             self.sign_condition,
