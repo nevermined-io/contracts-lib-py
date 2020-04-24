@@ -1,7 +1,3 @@
-"""Keeper module to call keeper-contracts."""
-#  Copyright 2018 Ocean Protocol Foundation
-#  SPDX-License-Identifier: Apache-2.0
-
 import logging
 from collections import namedtuple
 from urllib.parse import urlparse

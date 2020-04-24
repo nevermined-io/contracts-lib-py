@@ -1,10 +1,5 @@
-#  Copyright 2018 Ocean Protocol Foundation
-#  SPDX-License-Identifier: Apache-2.0
-
 import logging
-
 from web3 import Web3
-
 from contracts_lib_py import ContractBase
 from contracts_lib_py.event_filter import EventFilter
 
