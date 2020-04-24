@@ -2,7 +2,6 @@
 This is copied from Web3 python library to control the `requests`
 session parameters.
 """
-
 import lru
 import requests
 from requests.adapters import HTTPAdapter

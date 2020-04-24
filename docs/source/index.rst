@@ -1,8 +1,8 @@
-ocean-keeper API Reference Docs
+contracts-lib-py API Reference Docs
 ===========================
 
 These docs are API Reference docs.
-They are not tutorials or examples of how to use ocean-keeper.
+They are not tutorials or examples of how to use contracts-lib-py.
 For those, see `the Ocean Protocol docs site <https://docs.oceanprotocol.com/>`_.
 
 Contents

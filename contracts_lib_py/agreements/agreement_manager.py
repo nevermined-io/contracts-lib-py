@@ -1,7 +1,3 @@
-"""Keeper agreements sub-module."""
-#  Copyright 2018 Ocean Protocol Foundation
-#  SPDX-License-Identifier: Apache-2.0
-
 from collections import namedtuple
 
 from eth_utils import add_0x_prefix

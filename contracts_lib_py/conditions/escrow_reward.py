@@ -1,6 +1,3 @@
-#  Copyright 2018 Ocean Protocol Foundation
-#  SPDX-License-Identifier: Apache-2.0
-
 from contracts_lib_py.conditions.condition_base import ConditionBase
 
 

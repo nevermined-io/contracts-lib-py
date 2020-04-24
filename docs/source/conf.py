@@ -25,9 +25,9 @@ sys.path.insert(0, os.path.abspath('../../'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'ocean-keeper'
-copyright = 'ocean-keeper contributors'
-author = 'ocean-keeper contributors'
+project = 'contracts-lib-py'
+copyright = 'contracts-lib-py contributors'
+author = 'contracts-lib-py contributors'
 
 # The full version, including alpha/beta/rc tags
 release = '0.0.2'
