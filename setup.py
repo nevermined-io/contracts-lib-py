@@ -3,9 +3,6 @@
 
 """The setup script."""
 
-#  Copyright 2018 Ocean Protocol Foundation
-#  SPDX-License-Identifier: Apache-2.0
-
 import os
 from os.path import join
 
@@ -20,7 +17,7 @@ with open('CHANGELOG.md') as history_file:
 # Installed by pip install ocean-utils
 # or pip install -e .
 install_requirements = [
-    'nevermind-contracts==0.1.0',
+    'nevermined-contracts==0.2.0',
     'web3==4.5.0',
     'requests==2.21.0',
 ]

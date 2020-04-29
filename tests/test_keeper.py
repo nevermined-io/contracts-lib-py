@@ -7,10 +7,8 @@ from contracts_lib_py import Keeper
 from contracts_lib_py.contract_handler import ContractHandler
 from contracts_lib_py.utils import prepare_prefixed_hash, add_ethereum_prefix_and_hash_msg
 from tests.resources.helper_functions import get_publisher_account, get_resource_path
-from tests.resources.tiers import e2e_test
 
 
-@e2e_test
 def test_keeper_instance():
     keeper = Keeper(ContractHandler.artifacts_path)
     assert keeper
@@ -47,14 +45,12 @@ def test_artifacts_path():
     assert keeper.artifacts_path == artifacts_path
 
 
-@e2e_test
 def test_get_network_id():
     network_id = Keeper.get_network_id()
     assert isinstance(network_id, int)
     assert network_id in Keeper._network_name_map
 
 
-@e2e_test
 def test_get_network_name():
     name = Keeper.get_network_name(Keeper.get_network_id())
     assert name in Keeper._network_name_map.values()
@@ -76,7 +72,6 @@ def test_get_network_name():
     assert Keeper.get_network_name(0) == 'development'
 
 
-@e2e_test
 def test_verify_signature(web3_instance):
     """
     `keeper` lib currently uses `web3.eth.sign()` to sign the service agreement
@@ -120,7 +115,6 @@ def test_verify_signature(web3_instance):
     assert address == recovered_address, f'Could not verify signature using address {address}'
 
 
-@e2e_test
 def test_sign_and_recover(web3_instance):
     w3 = web3_instance
     account = get_publisher_account()

@@ -28,7 +28,7 @@ from contracts_lib_py.web3_provider import Web3Provider
 
 
 class Keeper(object):
-    """The Keeper class aggregates all contracts in the Ocean Protocol node."""
+    """The Keeper class aggregates all contracts in the Nevermind Protocol node."""
 
     DEFAULT_NETWORK_NAME = 'development'
     _network_name_map = {

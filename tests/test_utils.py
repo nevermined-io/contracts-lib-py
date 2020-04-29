@@ -1,10 +1,8 @@
 from web3 import Web3
 
 from contracts_lib_py.utils import split_signature
-from tests.resources.tiers import e2e_test
 
 
-@e2e_test
 def test_split_signature():
     signature = b'\x19\x15!\xecwnX1o/\xdeho\x9a9\xdd9^\xbb\x8c2z\x88!\x95\xdc=\xe6\xafc' \
                 b'\x0f\xe9\x14\x12\xc6\xde\x0b\n\xa6\x11\xc0\x1cvv\x9f\x99O8\x15\xf6f' \

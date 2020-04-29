@@ -1,5 +1,3 @@
-#  Copyright 2018 Ocean Protocol Foundation
-#  SPDX-License-Identifier: Apache-2.0
 import os
 
 import pytest
@@ -23,7 +21,7 @@ def get_keeper_url():
 @pytest.fixture(autouse=True)
 def setup_all():
     Web3Provider.get_web3(get_keeper_url())
-    ContractHandler.artifacts_path = os.path.expanduser('~/.nevermind/nevermind-contracts/artifacts')
+    ContractHandler.artifacts_path = os.path.expanduser('~/.nevermined/nevermined-contracts/artifacts')
     Keeper.get_instance(artifacts_path=ContractHandler.artifacts_path)
 
 
