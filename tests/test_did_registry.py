@@ -1,7 +1,4 @@
 """Test DIDRegistry contract."""
-#  Copyright 2018 Ocean Protocol Foundation
-#  SPDX-License-Identifier: Apache-2.0
-
 import secrets
 import uuid
 
@@ -11,28 +8,24 @@ from web3 import Web3
 
 from contracts_lib_py.didregistry import DIDRegistry
 from tests.resources.helper_functions import get_consumer_account, get_publisher_account
-from tests.resources.tiers import e2e_test
 
 
 def new_did():
     return uuid.uuid4().hex + uuid.uuid4().hex
 
 
-@e2e_test
 def test_did_registry_contract():
     did_registry = DIDRegistry.get_instance()
     assert did_registry
     assert isinstance(did_registry, DIDRegistry)
 
 
-@e2e_test
 def test_did_registry_get_block_number_updated():
     did_registry = DIDRegistry.get_instance()
     test_id = secrets.token_hex(32)
     assert did_registry.get_block_number_updated(test_id) == 0
 
 
-@e2e_test
 def test_register():
     did_registry = DIDRegistry.get_instance()
     w3 = Web3
@@ -54,7 +47,6 @@ def test_register():
     ) == register_account.address
 
 
-@e2e_test
 def test_register_with_invalid_params():
     did_registry = DIDRegistry.get_instance()
     w3 = Web3
@@ -73,7 +65,6 @@ def test_register_with_invalid_params():
         did_registry.register(did_test, checksum_test, url=value_test, account=None)
 
 
-@e2e_test
 def test_providers():
     did_registry = DIDRegistry.get_instance()
     w3 = Web3
