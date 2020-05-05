@@ -14,7 +14,7 @@ with open('README.md') as readme_file:
 with open('CHANGELOG.md') as history_file:
     history = history_file.read()
 
-# Installed by pip install ocean-utils
+# Installed by pip install contracts-lib-py
 # or pip install -e .
 install_requirements = [
     'nevermined-contracts==0.2.1',
@@ -36,7 +36,7 @@ test_requirements = [
     'tox',
 ]
 
-# Possibly required by developers of ocean-utils:
+# Possibly required by developers of contracts-lib-py:
 dev_requirements = [
     'bumpversion',
     'pkginfo',

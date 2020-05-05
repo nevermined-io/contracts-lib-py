@@ -6,7 +6,7 @@ from web3 import Web3
 
 from contracts_lib_py.contract_base import ContractBase
 from contracts_lib_py.event_filter import EventFilter
-from contracts_lib_py.exceptions import OceanDIDNotFound
+from contracts_lib_py.exceptions import DIDNotFound
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ DIDRegisterValues = namedtuple(
 
 
 class DIDRegistry(ContractBase):
-    """Class to register and update Ocean DID's."""
+    """Class to register and update DID's."""
     DID_REGISTRY_EVENT_NAME = 'DIDAttributeRegistered'
 
     CONTRACT_NAME = 'DIDRegistry'
@@ -284,7 +284,7 @@ class DIDRegistry(ContractBase):
         block_number = self.get_block_number_updated(did_bytes)
         logger.debug(f'got blockNumber {block_number} for did {did}')
         if block_number == 0:
-            raise OceanDIDNotFound(
+            raise DIDNotFound(
                 f'DID "{did}" is not found on-chain in the current did registry. '
                 f'Please ensure assets are registered in the correct keeper contracts. '
                 f'The keeper-contracts DIDRegistry address is {self.address}.'

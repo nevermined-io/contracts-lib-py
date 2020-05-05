@@ -5,7 +5,7 @@ from web3._utils.threads import Timeout
 
 from contracts_lib_py.contract_base import ContractBase
 from contracts_lib_py.event_filter import EventFilter
-from contracts_lib_py.exceptions import OceanInvalidTransaction
+from contracts_lib_py.exceptions import InvalidTransaction
 from contracts_lib_py.web3_provider import Web3Provider
 
 
@@ -28,7 +28,7 @@ class Dispenser(ContractBase):
 
         :param amount: Amount of tokens, int
         :param account: Account instance
-        :raise OceanInvalidTransaction: Transaction failed
+        :raise InvalidTransaction: Transaction failed
         :return: bool
         """
         address = account.address
@@ -86,7 +86,7 @@ class Dispenser(ContractBase):
             return True
 
         except ValueError as err:
-            raise OceanInvalidTransaction(
+            raise InvalidTransaction(
                 f'Requesting {amount} tokens'
                 f' to {address} failed with error: {err}'
             )
