@@ -1,4 +1,4 @@
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 from .contract_base import ContractBase
 from .didregistry import DIDRegistry
 from .dispenser import Dispenser
