@@ -7,8 +7,8 @@ from eth_keys import KeyAPI
 from eth_utils import big_endian_to_int
 from web3 import Web3
 from web3.contract import ContractEvent
-from web3.utils.encoding import to_bytes
-from web3.utils.threads import Timeout
+from web3._utils.encoding import to_bytes
+from web3._utils.threads import Timeout
 
 from contracts_lib_py.account import Account
 from contracts_lib_py.web3_provider import Web3Provider

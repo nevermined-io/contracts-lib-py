@@ -17,8 +17,8 @@ with open('CHANGELOG.md') as history_file:
 # Installed by pip install ocean-utils
 # or pip install -e .
 install_requirements = [
-    'nevermined-contracts==0.2.0',
-    'web3==4.5.0',
+    'nevermined-contracts==0.2.1',
+    'web3==5.9.0',
     'requests==2.21.0',
 ]
 

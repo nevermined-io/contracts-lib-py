@@ -124,7 +124,7 @@ class Keeper(object):
 
         :return: Network id, int
         """
-        return int(Web3Provider.get_web3().version.network)
+        return int(Web3Provider.get_web3().net.version)
 
     @staticmethod
     def sign_hash(msg_hash, account):

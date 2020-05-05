@@ -1,7 +1,7 @@
 import logging
 
 from web3 import Web3
-from web3.utils.threads import Timeout
+from web3._utils.threads import Timeout
 
 from contracts_lib_py.contract_base import ContractBase
 from contracts_lib_py.event_filter import EventFilter

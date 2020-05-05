@@ -17,15 +17,21 @@ class Web3Provider(object):
 
             Web3Provider._web3 = Web3(provider)
             # Reset attributes to avoid lint issue about no attribute
+            Web3Provider._web3.EthereumTesterProvider = getattr(Web3Provider._web3, 'EthereumTesterProvider')
+            Web3Provider._web3.HTTPProvider = getattr(Web3Provider._web3, 'HTTPProvider')
+            Web3Provider._web3.IPCProvider = getattr(Web3Provider._web3, 'IPCProvider')
+            Web3Provider._web3.Iban = getattr(Web3Provider._web3, 'Iban')
+            Web3Provider._web3.RequestManager = getattr(Web3Provider._web3, 'RequestManager')
+            Web3Provider._web3.WebsocketProvider = getattr(Web3Provider._web3, 'WebsocketProvider')
+            Web3Provider._web3.codec = getattr(Web3Provider._web3, 'codec')
             Web3Provider._web3.eth = getattr(Web3Provider._web3, 'eth')
+            Web3Provider._web3.geth = getattr(Web3Provider._web3, 'geth')
+            Web3Provider._web3.manager = getattr(Web3Provider._web3, 'manager')
             Web3Provider._web3.net = getattr(Web3Provider._web3, 'net')
-            Web3Provider._web3.personal = getattr(Web3Provider._web3, 'personal')
-            Web3Provider._web3.version = getattr(Web3Provider._web3, 'version')
-            Web3Provider._web3.txpool = getattr(Web3Provider._web3, 'txpool')
-            Web3Provider._web3.miner = getattr(Web3Provider._web3, 'miner')
-            Web3Provider._web3.admin = getattr(Web3Provider._web3, 'admin')
             Web3Provider._web3.parity = getattr(Web3Provider._web3, 'parity')
+            Web3Provider._web3.provider = getattr(Web3Provider._web3, 'provider')
             Web3Provider._web3.testing = getattr(Web3Provider._web3, 'testing')
+            Web3Provider._web3.version = getattr(Web3Provider._web3, 'version')
 
         return Web3Provider._web3
 

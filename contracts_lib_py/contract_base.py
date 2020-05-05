@@ -6,7 +6,7 @@
 import logging
 
 from web3 import Web3
-from web3.utils.threads import Timeout
+from web3._utils.threads import Timeout
 
 from contracts_lib_py.web3.contract import CustomContractFunction
 from contracts_lib_py.web3_provider import Web3Provider

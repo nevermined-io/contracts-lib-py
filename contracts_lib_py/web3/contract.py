@@ -1,7 +1,7 @@
 import logging
 
-from web3.utils import empty
-from web3.utils.contracts import prepare_transaction
+from web3._utils import empty
+from web3.contract import prepare_transaction
 
 from contracts_lib_py.wallet import Wallet
 
