@@ -14,11 +14,11 @@ with open('README.md') as readme_file:
 with open('CHANGELOG.md') as history_file:
     history = history_file.read()
 
-# Installed by pip install ocean-utils
+# Installed by pip install contracts-lib-py
 # or pip install -e .
 install_requirements = [
-    'nevermined-contracts==0.2.0',
-    'web3==4.5.0',
+    'nevermined-contracts==0.2.1',
+    'web3==5.9.0',
     'requests==2.21.0',
 ]
 
@@ -36,7 +36,7 @@ test_requirements = [
     'tox',
 ]
 
-# Possibly required by developers of ocean-utils:
+# Possibly required by developers of contracts-lib-py:
 dev_requirements = [
     'bumpversion',
     'pkginfo',
@@ -82,6 +82,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/keyko-io/contracts-lib-py',
-    version='0.2.0',
+    version='0.2.1',
     zip_safe=False,
 )

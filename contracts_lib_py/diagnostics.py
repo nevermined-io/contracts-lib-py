@@ -3,7 +3,7 @@ import os
 
 from contracts_lib_py import Keeper
 from contracts_lib_py.contract_handler import ContractHandler
-from contracts_lib_py.exceptions import OceanKeeperContractsNotFound
+from contracts_lib_py.exceptions import ContractsNotFound
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class Diagnostics:
                          f'Current network id is {network_id} and network name is {network_name}.'
                          f'Expected to find contracts ending with ".{network_name}.json",'
                          f' e.g. "{contract_name}.{network_name}.json"')
-            raise OceanKeeperContractsNotFound(
+            raise ContractsNotFound(
                 f'Keeper contracts for keeper network {network_name} were not found '
                 f'in {artifacts_path}. \n'
                 f'Found the following contracts: \n\t{existing_contract_names}'

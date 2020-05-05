@@ -11,15 +11,15 @@ class Wallet:
     The private key is always red from the encrypted keyfile and is never saved in memory beyond
     the life span of the signing function.
 
-    The use of this wallet allows Ocean tools to send rawTransactions which keeps the user
+    The use of this wallet allows Nevermined tools to send rawTransactions which keeps the user
     key and password safe and they are never sent outside. Another advantage of this is that
     we can interact directly with remote keeper nodes without having to run a local parity
     node since we only send the raw transaction hash so the user info is safe.
 
     Note that currently a local node is still necessary for completing the consume flow because
     the secretstore needs a parity node to encrypt/decrypt the asset urls. We could eliminate
-    this dependency on local parity node by using Brizo's publish endpoint for encryption and
-    sending url index to Brizo's consume endpoint instead of decrypting locally first.
+    this dependency on local parity node by using Gateway's publish endpoint for encryption and
+    sending url index to Gateway's consume endpoint instead of decrypting locally first.
     The secretstore also uses the parity node to sign the document key id which is necessary
     for communicating with the secret store nodes.
 
