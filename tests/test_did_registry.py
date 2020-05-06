@@ -32,7 +32,7 @@ def test_register():
     _id = new_did()
     did_test = 'did:op:' + _id
     register_account = get_publisher_account()
-    checksum_test = w3.sha3(text='checksum')
+    checksum_test = w3.keccak(text='checksum')
     value_test = 'http://localhost:5000'
     # register DID-> URL
     assert did_registry.register(
@@ -51,7 +51,7 @@ def test_register_with_invalid_params():
     did_registry = DIDRegistry.get_instance()
     w3 = Web3
     did_test = new_did()
-    checksum_test = w3.sha3(text='checksum')
+    checksum_test = w3.keccak(text='checksum')
     value_test = 'http://localhost:5000'
     # No checksum provided
     with pytest.raises(ValueError):
@@ -72,7 +72,7 @@ def test_providers():
     asset_id = add_0x_prefix(did_test)
     register_account = get_publisher_account()
     consumer_account = get_consumer_account()
-    checksum_test = w3.sha3(text='checksum')
+    checksum_test = w3.keccak(text='checksum')
     value_test = 'http://localhost:5000'
     test_address = w3.toChecksumAddress('068ed00cf0441e4829d9784fcbe7b9e26d4bd8d0')
     # register DID-> URL
@@ -113,7 +113,7 @@ def test_transfer_ownership():
     asset_id = add_0x_prefix(did_test)
     register_account = get_publisher_account()
     consumer_account = get_consumer_account()
-    checksum_test = w3.sha3(text='checksum')
+    checksum_test = w3.keccak(text='checksum')
     value_test = 'http://localhost:5000'
     test_address = w3.toChecksumAddress('068ed00cf0441e4829d9784fcbe7b9e26d4bd8d0')
 
@@ -132,7 +132,7 @@ def test_grant_permissions():
     w3 = Web3
     did_test = new_did()
     register_account = get_publisher_account()
-    checksum_test = w3.sha3(text='checksum')
+    checksum_test = w3.keccak(text='checksum')
     value_test = 'http://localhost:5000'
     test_address = w3.toChecksumAddress('068ed00cf0441e4829d9784fcbe7b9e26d4bd8d0')
 

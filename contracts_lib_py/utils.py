@@ -22,14 +22,14 @@ def generate_multi_value_hash(types, values):
     """
     Return the hash of the given list of values.
     This is equivalent to packing and hashing values in a solidity smart contract
-    hence the use of `soliditySha3`.
+    hence the use of `solidityKeccak`.
 
     :param types: list of solidity types expressed as strings
     :param values: list of values matching the `types` list
     :return: bytes
     """
     assert len(types) == len(values)
-    return Web3.soliditySha3(
+    return Web3.solidityKeccak(
         types,
         values
     )
@@ -49,13 +49,13 @@ def prepare_prefixed_hash(msg_hash):
 
 def add_ethereum_prefix_and_hash_msg(text):
     """
-    This method of adding the ethereum prefix seems to be used in web3.personal.sign/ecRecover.
+    This method of adding the ethereum prefix seems to be used in web3.sign/ecRecover.
 
     :param text: str any str to be signed / used in recovering address from a signature
     :return: hash of prefixed text according to the recommended ethereum prefix
     """
     prefixed_msg = f"\x19Ethereum Signed Message:\n{len(text)}{text}"
-    return Web3.sha3(text=prefixed_msg)
+    return Web3.keccak(text=prefixed_msg)
 
 
 def get_public_key_from_address(web3, account):
@@ -65,8 +65,8 @@ def get_public_key_from_address(web3, account):
     :param account:
     :return:
     """
-    _hash = web3.sha3(text='verify signature.')
-    signature = web3.personal.sign(_hash, account.address, account.password)
+    _hash = web3.keccak(text='verify signature.')
+    signature = web3.sign(_hash, account.address, account.password)
     signature = split_signature(web3, to_bytes(hexstr=signature))
     signature_vrs = Signature(signature.v % 27,
                               big_endian_to_int(signature.r),

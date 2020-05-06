@@ -1,6 +1,7 @@
 import logging
 import os
 
+from eth_keys.datatypes import Signature
 from eth_utils import big_endian_to_int
 
 from contracts_lib_py.agreements.agreement_manager import AgreementStoreManager
@@ -21,7 +22,7 @@ from contracts_lib_py.templates.compute_execution_template import EscrowComputeE
 from contracts_lib_py.templates.template_manager import TemplateStoreManager
 from contracts_lib_py.token import Token
 from contracts_lib_py.utils import (add_ethereum_prefix_and_hash_msg, generate_multi_value_hash,
-                                split_signature)
+                                    split_signature)
 from contracts_lib_py.wallet import Wallet
 from contracts_lib_py.web3.signature import SignatureFix
 from contracts_lib_py.web3_provider import Web3Provider
@@ -170,7 +171,7 @@ class Keeper(object):
         :param account: Account
         :return:
         """
-        return Web3Provider.get_web3().personal.unlockAccount(account.address, account.password)
+        return Web3Provider.get_web3().unlockAccount(account.address, account.password)
 
     @staticmethod
     def get_ether_balance(address):
