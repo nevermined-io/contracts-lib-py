@@ -19,7 +19,7 @@ class ConditionStoreManager(ContractBase):
         :param condition_id: id of the condition, str
         :return:
         """
-        condition = self.contract_concise.getCondition(condition_id)
+        condition = self.contract.caller.getCondition(condition_id)
         if condition and len(condition) == 7:
             return ConditionValues(*condition)
 
@@ -31,7 +31,7 @@ class ConditionStoreManager(ContractBase):
         :param condition_id: id of the condition, str
         :return: State of the condition
         """
-        return self.contract_concise.getConditionState(condition_id)
+        return self.contract.caller.getConditionState(condition_id)
 
     def get_num_condition(self):
         """
@@ -39,4 +39,4 @@ class ConditionStoreManager(ContractBase):
 
         :return: the length of the conditions list, int
         """
-        return self.contract_concise.getConditionListSize()
+        return self.contract.caller.getConditionListSize()

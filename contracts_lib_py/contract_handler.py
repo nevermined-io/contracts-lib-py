@@ -3,7 +3,6 @@ import logging
 import os
 
 from web3 import Web3
-from web3.contract import ConciseContract
 
 from contracts_lib_py import Keeper
 from contracts_lib_py.web3_provider import Web3Provider
@@ -18,8 +17,6 @@ class ContractHandler(object):
     Retrieval of deployed keeper contracts must use this `ContractHandler`.
     Example:
         contract = ContractHandler.get('ServiceExecutionAgreement')
-        concise_contract = ContractHandler.get_concise_contract('ServiceExecutionAgreement')
-
     """
     _contracts = dict()
     artifacts_path = None
@@ -35,16 +32,6 @@ class ContractHandler(object):
         return (ContractHandler._contracts.get(name) or ContractHandler._load(name))[0]
 
     @staticmethod
-    def get_concise_contract(name):
-        """
-        Return the Concise Contract instance for a given name.
-
-        :param name: Contract name, str
-        :return: Concise Contract instance
-        """
-        return (ContractHandler._contracts.get(name) or ContractHandler._load(name))[1]
-
-    @staticmethod
     def get_contract_version(name):
         """
         Return the version of the contract in use.
@@ -52,7 +39,7 @@ class ContractHandler(object):
         :param name: name of the contract
         :return: str version
         """
-        return ContractHandler._contracts.get(name)[2]
+        return ContractHandler._contracts.get(name)[1]
 
     @staticmethod
     def set(name, contract):
@@ -62,7 +49,7 @@ class ContractHandler(object):
         :param name: Contract name, str
         :param contract: Contract instance
         """
-        ContractHandler._contracts[name] = (contract, ConciseContract(contract))
+        ContractHandler._contracts[name] = contract
 
     @staticmethod
     def has(name):
@@ -88,8 +75,7 @@ class ContractHandler(object):
         address = Web3.toChecksumAddress(contract_definition['address'])
         abi = contract_definition['abi']
         contract = Web3Provider.get_web3().eth.contract(address=address, abi=abi)
-        ContractHandler._contracts[contract_name] = (
-            contract, ConciseContract(contract), contract_definition['version'])
+        ContractHandler._contracts[contract_name] = (contract, contract_definition['version'])
         return ContractHandler._contracts[contract_name]
 
     @staticmethod

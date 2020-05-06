@@ -46,4 +46,4 @@ class ThresholdCondition(ConditionBase):
         :param threshold: the required number of fulfilled input conditions, int
         :return:
         """
-        return self.contract_concise.canFulfill(input_conditions, threshold)
+        return self.contract.caller.canFulfill(input_conditions, threshold)
