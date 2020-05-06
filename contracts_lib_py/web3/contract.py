@@ -13,7 +13,7 @@ class CustomContractFunction:
 
     def transact(self, transaction=None):
         """
-        Customize calling smart contract transaction functions to use `personal_sendTransaction`
+        Customize calling smart contract transaction functions to use `sendTransaction`
         instead of `eth_sendTransaction` and to estimate gas limit. This function
         is largely copied from web3 ContractFunction with important addition.
 
@@ -21,7 +21,7 @@ class CustomContractFunction:
         `transaction` dict.
 
         :param transaction: dict which has the required transaction arguments per
-            `personal_sendTransaction` requirements.
+            `sendTransaction` requirements.
         :return: hex str transaction hash
         """
         if transaction is None:
@@ -115,7 +115,7 @@ def transact_with_contract_function(
         logging.debug(f'sending raw tx: function: {function_name}, tx hash: {raw_tx.hex()}')
         txn_hash = web3.eth.sendRawTransaction(raw_tx)
     elif passphrase:
-        txn_hash = web3.personal.sendTransaction(transact_transaction, passphrase)
+        txn_hash = web3.sendTransaction(transact_transaction, passphrase)
     else:
         txn_hash = web3.eth.sendTransaction(transact_transaction)
 

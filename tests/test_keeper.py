@@ -82,16 +82,16 @@ def test_verify_signature(web3_instance):
 
     It is more convenient to sign a message using `web3.eth.sign()` because it only requires the
     account address
-    whereas `web3.eth.account.signHash()` requires a private_key to sign the message.
-    `web3.eth.account.signHash()` also does not prepend anything to the message before signing.
+    whereas `web3.eth.account.sign_hash()` requires a private_key to sign the message.
+    `web3.eth.account.sign_hash()` also does not prepend anything to the message before signing.
     Messages signed via Metamask in pleuston use the latter method and currently fail to verify in
     `keeper`.
     The signature verification fails because recoverHash is being used on a prepended message but
-    the signature created by `web3.eth.account.signHash()` does not add a prefix before signing.
+    the signature created by `web3.eth.account.sign_hash()` does not add a prefix before signing.
     """
     w3 = web3_instance
 
-    # Signature created from Metamask (same as using `web3.eth.account.signHash()`)
+    # Signature created from Metamask (same as using `web3.eth.account.sign_hash()`)
     address = '0x8248039e67801Ac0B9d0e38201E963194abdb540'
     hex_agr_hash = '0xc8ea6bf6f4f4e2bf26a645dd4a1be20f5151c74964026c36efc2149bfae5f924'
     agreement_hash = Web3.toBytes(hexstr=hex_agr_hash)
@@ -119,7 +119,7 @@ def test_sign_and_recover(web3_instance):
     w3 = web3_instance
     account = get_publisher_account()
     msg = 'testing-signature-and-recovery-of-signer-address'
-    msg_hash = w3.sha3(text=msg)
+    msg_hash = w3.keccak(text=msg)
     signature = Keeper.sign_hash(msg_hash, account)
     address = w3.toChecksumAddress(Keeper.ec_recover(msg_hash, signature))
     assert address == account.address
@@ -129,7 +129,7 @@ def test_sign_and_recover(web3_instance):
     address = w3.eth.account.recoverHash(msg_hash, signature=signature)
     assert address == account.address
 
-    # Now do the opposite, sign with eth.account.signHash() (using prefixed msg hash),
+    # Now do the opposite, sign with eth.account.sign_hash() (using prefixed msg hash),
     # then recover address with Keeper.ec_recover() on the msg hash with no prefix.
     with open(get_resource_path('data', 'publisher_key_file.json')) as kf:
         key = kf.read()
