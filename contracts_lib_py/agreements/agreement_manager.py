@@ -30,7 +30,7 @@ class AgreementStoreManager(ContractBase):
         :return: bool
         """
 
-        tx_hash = self.contract_concise.createAgreement(
+        tx_hash = self.contract.caller.createAgreement(
             agreement_id,
             did,
             condition_types,
@@ -47,7 +47,7 @@ class AgreementStoreManager(ContractBase):
         :param agreement_id: id of the agreement, hex str
         :return: the agreement attributes.
         """
-        agreement = self.contract_concise.getAgreement(agreement_id)
+        agreement = self.contract.caller.getAgreement(agreement_id)
         if agreement and len(agreement) == 6:
             agreement = AgreementValues(*agreement)
             did = add_0x_prefix(agreement.did.hex())
@@ -70,11 +70,11 @@ class AgreementStoreManager(ContractBase):
         :param agreement_id: id of the agreement, hex str
         :return: the DID owner associated with agreement.did from the DID registry.
         """
-        return self.contract_concise.getAgreementDIDOwner(agreement_id)
+        return self.contract.caller.getAgreementDIDOwner(agreement_id)
 
     def get_num_agreements(self):
         """Return the size of the Agreements list.
 
         :return: the length of the agreement list, int
         """
-        return self.contract_concise.getAgreementListSize()
+        return self.contract.caller.getAgreementListSize()

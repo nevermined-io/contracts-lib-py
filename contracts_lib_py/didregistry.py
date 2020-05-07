@@ -99,7 +99,7 @@ class DIDRegistry(ContractBase):
 
     def get_block_number_updated(self, did):
         """Return the block number the last did was updated on the block chain."""
-        return self.contract_concise.getBlockNumberUpdated(did)
+        return self.contract.caller.getBlockNumberUpdated(did)
 
     def get_did_owner(self, did):
         """
@@ -108,7 +108,7 @@ class DIDRegistry(ContractBase):
         :param did: Asset did, did
         :return: ethereum address, hex str
         """
-        return self.contract_concise.getDIDOwner(did)
+        return self.contract.caller.getDIDOwner(did)
 
     def add_provider(self, did, provider_address, account):
         """
@@ -210,7 +210,7 @@ class DIDRegistry(ContractBase):
         :param address: ethereum account address, hex str
         :return: true if the address has access permission to a DID
         """
-        return self.contract_concise.getPermission(did, address)
+        return self.contract.caller.getPermission(did, address)
 
     def is_did_provider(self, did, address):
         """
@@ -220,7 +220,7 @@ class DIDRegistry(ContractBase):
         :param address: ethereum account address, hex str
         :return: bool
         """
-        return self.contract_concise.isDIDProvider(did, address)
+        return self.contract.caller.isDIDProvider(did, address)
 
     def get_did_providers(self, did):
         """
@@ -231,15 +231,13 @@ class DIDRegistry(ContractBase):
             list of addresses
             None if asset has no registerd providers
         """
-        register_values = self.contract_concise.getDIDRegister(did)
+        register_values = self.contract.caller.getDIDRegister(did)
         if register_values and len(register_values) == 5 and register_values[0]:
             # sanitize providers list, because if providers were removed they will
             # be replaced with null/None
-            valid_providers = [a for a in register_values[4] if a is not None]
+            valid_providers = [a for a in register_values[4] if a != '0x0000000000000000000000000000000000000000']
             register_values[4] = valid_providers
             return DIDRegisterValues(*register_values).providers
-
-        return None
 
     def get_owner_asset_ids(self, address):
         """

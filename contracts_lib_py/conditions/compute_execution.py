@@ -42,4 +42,4 @@ class ComputeExecutionCondition(ConditionBase):
         :param computer_consumer_address: is the address of the consumer user, str
         :return: bool
         """
-        return self.contract_concise.wasComputeTriggered(did, computer_consumer_address)
+        return self.contract.caller.wasComputeTriggered(did, computer_consumer_address)

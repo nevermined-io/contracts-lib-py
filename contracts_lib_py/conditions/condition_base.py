@@ -44,7 +44,7 @@ class ConditionBase(ContractBase):
         :param condition_id: id of the condition, str
         :return:
         """
-        tx_hash = self.contract_concise.abortByTimeOut(condition_id)
+        tx_hash = self.contract.caller.abortByTimeOut(condition_id)
         return self.is_tx_successful(tx_hash)
 
     def _hash_values(self, *args, **kwargs):
@@ -54,7 +54,7 @@ class ConditionBase(ContractBase):
         :param kwargs:
         :return:
         """
-        return self.contract_concise.hashValues(*args, **kwargs)
+        return self.contract.caller.hashValues(*args, **kwargs)
 
     def subscribe_condition_fulfilled(self, agreement_id, timeout, callback, args,
                                       timeout_callback=None, wait=False,

@@ -47,7 +47,7 @@ class AccessSecretStoreCondition(ConditionBase):
         :param grantee_address: is the address of the granted user, str
         :return: true if the access was granted, bool
         """
-        return self.contract_concise.checkPermissions(grantee_address, document_id)
+        return self.contract.caller.checkPermissions(grantee_address, document_id)
 
     def get_purchased_assets_by_address(self, address, from_block=0, to_block='latest'):
         """

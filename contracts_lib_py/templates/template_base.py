@@ -45,7 +45,7 @@ class TemplateBase(ContractBase):
 
         :return:
         """
-        return self.contract_concise.getConditionTypes()
+        return self.contract.caller.getConditionTypes()
 
     def get_agreement_data(self, agreement_id):
         """
@@ -53,7 +53,7 @@ class TemplateBase(ContractBase):
         :param agreement_id: id of the agreement, hex str
         :return:
         """
-        consumer, provider = self.contract_concise.getAgreementData(agreement_id)
+        consumer, provider = self.contract.caller.getAgreementData(agreement_id)
         return consumer, provider
 
     def get_agreement_consumer(self, agreement_id):

@@ -29,7 +29,6 @@ class ContractBase(object):
             from contracts_lib_py.contract_handler import ContractHandler
             dependencies['ContractHandler'] = ContractHandler
 
-        self.contract_concise = dependencies['ContractHandler'].get_concise_contract(contract_name)
         self.contract = dependencies['ContractHandler'].get(contract_name)
         self.version = dependencies['ContractHandler'].get_contract_version(contract_name)
 
@@ -44,10 +43,6 @@ class ContractBase(object):
         assert cls is not ContractBase, 'ContractBase is not meant to be used directly.'
         assert cls.CONTRACT_NAME, 'CONTRACT_NAME must be set to a valid keeper contract name.'
         return cls(cls.CONTRACT_NAME, dependencies)
-
-    @property
-    def _contract_concise(self):
-        return self.contract_concise
 
     @property
     def _contract(self):

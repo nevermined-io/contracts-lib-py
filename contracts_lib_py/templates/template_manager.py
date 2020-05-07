@@ -18,7 +18,7 @@ class TemplateStoreManager(ContractBase):
         :param template_id: id of the template, str
         :return:
         """
-        template = self.contract_concise.getTemplate(template_id)
+        template = self.contract.caller.getTemplate(template_id)
         if template and len(template) == 4:
             return AgreementTemplate(*template)
 
@@ -81,7 +81,7 @@ class TemplateStoreManager(ContractBase):
         :param template_id: id of the template, str
         :return: bool
         """
-        return self.contract_concise.isTemplateApproved(template_id)
+        return self.contract.caller.isTemplateApproved(template_id)
 
     def get_num_templates(self):
         """
@@ -89,4 +89,4 @@ class TemplateStoreManager(ContractBase):
 
         :return: number of templates, int
         """
-        return self.contract_concise.getTemplateListSize()
+        return self.contract.caller.getTemplateListSize()

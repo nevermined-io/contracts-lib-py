@@ -86,7 +86,7 @@ def test_providers():
     )
     unknown_asset_id = add_0x_prefix(new_did())
     providers = did_registry.get_did_providers(unknown_asset_id)
-    assert providers is None
+    assert len(providers) == 0
 
     assert did_registry.is_did_provider(asset_id, register_account.address) is False
 

@@ -14,7 +14,7 @@ class Token(ContractBase):
         :param account_address: Account address, str
         :return: int
         """
-        return self.contract_concise.balanceOf(account_address)
+        return self.contract.caller.balanceOf(account_address)
 
     def get_allowance(self, owner_address, spender_address):
         """
@@ -23,7 +23,7 @@ class Token(ContractBase):
         :param spender_address: Address, str
         :return:
         """
-        return self.contract_concise.allowance(owner_address, spender_address)
+        return self.contract.caller.allowance(owner_address, spender_address)
 
     def token_approve(self, spender_address, price, from_account):
         """
@@ -72,7 +72,7 @@ class Token(ContractBase):
 
         :return: int
         """
-        return self.contract_concise.totalSupply()
+        return self.contract.caller.totalSupply()
 
     def increase_allowance(self, spender_address, added_value, owner_account):
         """
