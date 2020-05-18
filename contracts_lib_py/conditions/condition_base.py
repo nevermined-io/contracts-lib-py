@@ -36,6 +36,10 @@ class ConditionBase(ContractBase):
         :return: true if the condition was successfully fulfilled, bool
         """
         tx_hash = self.send_transaction('fulfill', args, **kwargs)
+        if self.is_tx_successful(tx_hash):
+            logger.info('Condition fulfilled successfully')
+        else:
+            logger.error('It looks that there was a problem fulfilling the tx.')
         return tx_hash
 
     def abort_by_timeout(self, condition_id):
