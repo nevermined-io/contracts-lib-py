@@ -82,7 +82,7 @@ class ContractBase(object):
         :return: Tx receipt
         """
         try:
-            Web3Provider.get_web3().eth.waitForTransactionReceipt(tx_hash, timeout=20)
+            tx_receipt = Web3Provider.get_web3().eth.waitForTransactionReceipt(tx_hash, timeout=20)
         except Timeout:
             logger.info('Waiting for transaction receipt timed out.')
             return
@@ -90,7 +90,7 @@ class ContractBase(object):
             logger.error(f'Waiting for transaction receipt failed: {e}')
             return
 
-        return Web3Provider.get_web3().eth.getTransactionReceipt(tx_hash)
+        return tx_receipt
 
     def is_tx_successful(self, tx_hash):
         receipt = self.get_tx_receipt(tx_hash)
