@@ -5,7 +5,7 @@ from contracts_lib_py.contract_base import ContractBase
 
 class Token(ContractBase):
     """Class representing the Token contract."""
-    CONTRACT_NAME = 'OceanToken'
+    CONTRACT_NAME = 'NeverminedToken'
 
     def get_token_balance(self, account_address):
         """
