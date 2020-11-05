@@ -17,7 +17,7 @@ with open('CHANGELOG.md') as history_file:
 # Installed by pip install contracts-lib-py
 # or pip install -e .
 install_requirements = [
-    'nevermined-contracts==0.2.1',
+    'nevermined-contracts==0.5.0',
     'web3==5.9.0',
     'requests==2.21.0',
 ]
@@ -55,8 +55,8 @@ for d, _, _ in os.walk('contracts_lib_py'):
         packages.append(d.replace(os.path.sep, '.'))
 
 setup(
-    author="keyko-io",
-    author_email='root@keyko.io',
+    author="nevermined-io",
+    author_email='root@nevermined.io',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
@@ -81,7 +81,7 @@ setup(
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/keyko-io/contracts-lib-py',
-    version='0.4.0',
+    url='https://github.com/nevermined-io/contracts-lib-py',
+    version='0.5.0',
     zip_safe=False,
 )

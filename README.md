@@ -1,13 +1,14 @@
-[![banner](https://raw.githubusercontent.com/keyko-io/assets/master/images/logo/small/keyko_logo@2x-100.jpg)](https://keyko.io)
+[![banner](https://raw.githubusercontent.com/nevermined-io/assets/main/images/logo/banner_logo.png)](https://nevermined.io)
 
 # contracts-lib-py
 
 > Wraps keeper contracts and web3 functions.
-> [keyko.io](https://keyko.io)
+> [nevermined.io](https://nevermined.io)
 
 [![PyPI](https://img.shields.io/pypi/v/contracts-lib-py.svg)](https://pypi.org/project/contracts-lib-py/)
 
 ## Attribution
+
 This project is based in the [Ocean Protocol Keeper-py-lib](https://github.com/oceanprotocol/keeper-py-lib). It keeps the same Apache v2 License and adds some improvements.
 
 

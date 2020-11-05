@@ -26,11 +26,11 @@ jobs:
     - name: Install dependencies
       run: |
         docker login -u ${{ secrets.NEVERMINED_DOCKER_USERNAME }} -p ${{ secrets.NEVERMINED_DOCKER_TOKEN}}
-        git clone https://github.com/keyko-io/nevermined-tools
+        git clone https://github.com/nevermined-io/tools nevermined-tools
         cd nevermined-tools
         rm -rf "${HOME}/.nevermined/nevermined-contracts/artifacts"
         export KEEPER_VERSION=v0.4.1
-        bash -x start_nevermined.sh --no-commons --no-events-handler --no-gateway  --no-secret-store --no-faucet --no-acl-contract 2>&1 > start_nevermined.log &
+        bash -x start_nevermined.sh --no-commons --no-gateway   --no-faucet --no-acl-contract 2>&1 > start_nevermined.log &
         cd ..
         for i in $(seq 1 50); do
           sleep 5
