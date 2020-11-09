@@ -40,10 +40,16 @@ jobs:
         ./scripts/wait_for_migration_and_extract_keeper_artifacts.sh
         python -m pip install --upgrade pip
         pip install -r requirements_dev.txt
-    - name: Test with pytest
+    - name: Test on spree
       run: |
         export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
         export PARITY_PASSWORD=node0
         export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
-        pip install pytest
-        pytest
+        pytest -v
+    - name: Test on rinkeby
+      run: |
+        export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
+        export PARITY_PASSWORD=node0
+        export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
+        export KEEPER_URL=https://rinkeby.infura.io/v3/${{ secrets.INFURA_TOKEN }}
+        pytest -v

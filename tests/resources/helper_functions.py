@@ -1,11 +1,34 @@
 import os
 import pathlib
 
+
 from contracts_lib_py import Keeper
 from contracts_lib_py.utils import get_account
+from contracts_lib_py.web3_provider import Web3Provider
+from contracts_lib_py.keeper import Keeper
+from contracts_lib_py.contract_handler import ContractHandler
+
+
 
 PUBLISHER_INDEX = 1
 CONSUMER_INDEX = 0
+
+
+def get_keeper_url():
+    if os.getenv('KEEPER_URL'):
+        return os.getenv('KEEPER_URL')
+    return 'http://localhost:8545'
+
+
+def setup_keeper():
+    Web3Provider.get_web3(get_keeper_url())
+    ContractHandler.artifacts_path = os.path.expanduser('~/.nevermined/nevermined-contracts/artifacts')
+    Keeper.get_instance(artifacts_path=ContractHandler.artifacts_path)
+
+
+def get_network_name():
+    setup_keeper()
+    return Keeper.get_network_name(Keeper.get_network_id())
 
 
 def get_resource_path(dir_name, file_name):
