@@ -40,6 +40,7 @@ jobs:
         export PARITY_PASSWORD=node0
         export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
         pytest -v
+    - name: Checkout rinkeby contracts
       uses: actions/checkout@v2
       with:
         repository: nevermined-io/contracts
