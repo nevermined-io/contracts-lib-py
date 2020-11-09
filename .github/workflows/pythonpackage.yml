@@ -23,23 +23,23 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
-    # - name: Install dependencies
-    #   run: |
-    #     docker login -u ${{ secrets.NEVERMINED_DOCKER_USERNAME }} -p ${{ secrets.NEVERMINED_DOCKER_TOKEN}}
-    #     git clone https://github.com/nevermined-io/tools nevermined-tools
-    #     cd nevermined-tools
-    #     rm -rf "${HOME}/.nevermined/nevermined-contracts/artifacts"
-    #     ./start_nevermined.sh --no-commons --no-gateway --no-faucet --no-acl-contract --latest &
-    #     cd ..
-    #     ./scripts/wait_for_migration_and_extract_keeper_artifacts.sh
-    #     python -m pip install --upgrade pip
-    #     pip install -r requirements_dev.txt
-    # - name: Test on spree
-    #   run: |
-    #     export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
-    #     export PARITY_PASSWORD=node0
-    #     export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
-    #     pytest -v
+    - name: Install dependencies
+      run: |
+        docker login -u ${{ secrets.NEVERMINED_DOCKER_USERNAME }} -p ${{ secrets.NEVERMINED_DOCKER_TOKEN}}
+        git clone https://github.com/nevermined-io/tools nevermined-tools
+        cd nevermined-tools
+        rm -rf "${HOME}/.nevermined/nevermined-contracts/artifacts"
+        ./start_nevermined.sh --no-commons --no-gateway --no-faucet --no-acl-contract --latest &
+        cd ..
+        ./scripts/wait_for_migration_and_extract_keeper_artifacts.sh
+        python -m pip install --upgrade pip
+        pip install -r requirements_dev.txt
+    - name: Test on spree
+      run: |
+        export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
+        export PARITY_PASSWORD=node0
+        export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
+        pytest -v
     - name: Checkout rinkeby contracts
       uses: actions/checkout@v2
       with:
@@ -48,11 +48,9 @@ jobs:
         path: contracts
     - name: Test on rinkeby
       run: |
-        mkdir -p ~/.nevermined/nevermined-contracts/artifacts
         cp $GITHUB_WORKSPACE/contracts/artifacts/* ~/.nevermined/nevermined-contracts/artifacts/
         export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
         export PARITY_PASSWORD=node0
         export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
         export KEEPER_URL=https://rinkeby.infura.io/v3/${{ secrets.INFURA_TOKEN }}
-        pip install -r requirements_dev
         pytest -v
