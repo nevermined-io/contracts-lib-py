@@ -57,10 +57,17 @@ class Keeper(object):
                 self._contract_name_to_instance = contract
                 setattr(self, name, contract)
 
-        self.dispenser = None
-        if self.network_name != 'pacific':
+        # make dispenser and token contracts optional
+        try:
             self.dispenser = Dispenser.get_instance()
-        self.token = Token.get_instance()
+        except FileNotFoundError:
+            self.dispenser = None
+
+        try:
+            self.token = Token.get_instance()
+        except FileNotFoundError:
+            self.token = None
+
         self.did_registry = DIDRegistry.get_instance()
         self.template_manager = TemplateStoreManager.get_instance()
         self.escrow_access_secretstore_template = EscrowAccessSecretStoreTemplate.get_instance()
