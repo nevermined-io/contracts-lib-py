@@ -29,21 +29,28 @@ jobs:
         git clone https://github.com/nevermined-io/tools nevermined-tools
         cd nevermined-tools
         rm -rf "${HOME}/.nevermined/nevermined-contracts/artifacts"
-        export KEEPER_VERSION=v0.4.1
-        bash -x start_nevermined.sh --no-commons --no-gateway   --no-faucet --no-acl-contract 2>&1 > start_nevermined.log &
+        ./start_nevermined.sh --no-commons --no-gateway --no-faucet --no-acl-contract --latest &
         cd ..
-        for i in $(seq 1 50); do
-          sleep 5
-          [ -f "${HOME}/.nevermined/nvermind-contracts/artifacts/ready" ] && break
-        done
-        ls -la "${HOME}/.nevermined/nevermined-contracts/artifacts/"
         ./scripts/wait_for_migration_and_extract_keeper_artifacts.sh
         python -m pip install --upgrade pip
         pip install -r requirements_dev.txt
-    - name: Test with pytest
+    - name: Test on spree
       run: |
         export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
         export PARITY_PASSWORD=node0
         export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
-        pip install pytest
-        pytest
+        pytest -v
+    - name: Checkout rinkeby contracts
+      uses: actions/checkout@v2
+      with:
+        repository: nevermined-io/contracts
+        token: ${{ secrets.CLONE_REPO_TOKEN }}
+        path: contracts
+    - name: Test on rinkeby
+      run: |
+        cp -r $GITHUB_WORKSPACE/contracts/artifacts/* ~/.nevermined/nevermined-contracts/artifacts/
+        export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
+        export PARITY_PASSWORD=node0
+        export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
+        export KEEPER_URL=https://rinkeby.infura.io/v3/${{ secrets.INFURA_TOKEN }}
+        pytest -v
