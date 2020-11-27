@@ -148,3 +148,40 @@ def test_grant_permissions():
     did_registry.revoke_permission(did_test, test_address, register_account)
 
     assert not did_registry.get_permission(did_test, test_address)
+
+
+def test_provenance_flow():
+    did_registry = DIDRegistry.get_instance()
+    w3 = Web3
+    did_test = new_did()
+    register_account = get_publisher_account()
+    checksum_test = w3.keccak(text='checksum')
+    activity_id = new_did()
+    provenance_id = new_did()
+    url = 'http://localhost:5000'
+    test_address = w3.toChecksumAddress('068ed00cf0441e4829d9784fcbe7b9e26d4bd8d0')
+
+    assert did_registry.register(did_test, checksum_test, url=url, account=register_account,
+                                 providers=[test_address], activity_id=activity_id) is True
+
+    print(did_registry.get_provenance_entry(did_test))
+
+    assert register_account.address == did_registry.get_provenance_owner(did_test)
+
+    # used = did_registry.used(provenance_id, did_test, test_address,  activity_id, "", account=register_account, attributes="used test")
+
+    associated = did_registry.was_associated_with(provenance_id, did_test, test_address,  activity_id, account=register_account, attributes="associated test")
+
+    print(associated)
+    # print(did_test)
+    # print(checksum_test)
+    # print(register_account.address)
+    # print(test_address)
+    # print(activity_id)
+    # print(did_registry.get_provenance_entry(did_test))
+    import time
+    time.sleep(20)
+    print(did_registry.get_provenance_entry(did_test))
+
+    print(did_registry.get_did_provenance_events(Web3.toBytes(hexstr=did_test)))
+    # print(did_registry.get_provenance_method_events("Used", Web3.toBytes(hexstr=did_test)))
