@@ -46,11 +46,11 @@ jobs:
         repository: nevermined-io/contracts
         token: ${{ secrets.CLONE_REPO_TOKEN }}
         path: contracts
-    - name: Test on rinkeby
-      run: |
-        cp -r $GITHUB_WORKSPACE/contracts/artifacts/* ~/.nevermined/nevermined-contracts/artifacts/
-        export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
-        export PARITY_PASSWORD=node0
-        export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
-        export KEEPER_URL=https://rinkeby.infura.io/v3/${{ secrets.INFURA_TOKEN }}
-        pytest -v
+#    - name: Test on rinkeby
+#      run: |
+#        cp -r $GITHUB_WORKSPACE/contracts/artifacts/* ~/.nevermined/nevermined-contracts/artifacts/
+#        export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
+#        export PARITY_PASSWORD=node0
+#        export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
+#        export KEEPER_URL=https://rinkeby.infura.io/v3/${{ secrets.INFURA_TOKEN }}
+#        pytest -v

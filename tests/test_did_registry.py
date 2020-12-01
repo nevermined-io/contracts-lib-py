@@ -148,3 +148,121 @@ def test_grant_permissions():
     did_registry.revoke_permission(did_test, test_address, register_account)
 
     assert not did_registry.get_permission(did_test, test_address)
+
+
+def test_provenance_events():
+    did_registry = DIDRegistry.get_instance()
+    w3 = Web3
+    did_test = new_did()
+    register_account = get_publisher_account()
+    checksum_test = w3.keccak(text='checksum')
+    activity_id = new_did()
+    provenance_id = new_did()
+    url = 'http://localhost:5000'
+    test_address = w3.toChecksumAddress('068ed00cf0441e4829d9784fcbe7b9e26d4bd8d0')
+
+    assert did_registry.register(did_test, checksum_test, url=url, account=register_account,
+                                 providers=[test_address], activity_id=activity_id) is True
+
+    did_registry.used(provenance_id, did_test, test_address, activity_id, "",
+                      account=register_account, attributes="used test")
+
+    assert len(did_registry.get_did_provenance_events(Web3.toBytes(hexstr=did_test))) == 2
+
+
+def test_provenance_from_registry():
+    did_registry = DIDRegistry.get_instance()
+    w3 = Web3
+    did_test = new_did()
+    register_account = get_publisher_account()
+    checksum_test = w3.keccak(text='checksum')
+    activity_id = new_did()
+    provenance_id = new_did()
+    url = 'http://localhost:5000'
+    test_address = w3.toChecksumAddress('068ed00cf0441e4829d9784fcbe7b9e26d4bd8d0')
+
+    assert did_registry.register(did_test, checksum_test, url=url, account=register_account,
+                                 providers=[test_address], activity_id=activity_id) is True
+
+    assert register_account.address == did_registry.get_provenance_owner(did_test)
+
+    did_registry.used(provenance_id, did_test, test_address, activity_id, "",
+                      account=register_account, attributes="used test")
+
+    provenance_entry = did_registry.get_provenance_entry(provenance_id)
+    assert ("0x" + activity_id, provenance_entry['activity_id'])
+    assert ("0x" + did_test, provenance_entry['did'])
+    assert (3, provenance_entry['method'])
+    assert (register_account.address, provenance_entry['created_by'])
+
+
+def test_delegate_provenance():
+    did_registry = DIDRegistry.get_instance()
+    w3 = Web3
+    did_test = new_did()
+    register_account = get_publisher_account()
+    delegated_account = get_consumer_account()
+    checksum_test = w3.keccak(text='checksum')
+    activity_id = new_did()
+    provenance_id = new_did()
+    url = 'http://localhost:5000'
+    test_address = w3.toChecksumAddress('068ed00cf0441e4829d9784fcbe7b9e26d4bd8d0')
+
+    assert did_registry.register(did_test, checksum_test, url=url, account=register_account,
+                                 providers=[test_address], activity_id=activity_id) is True
+
+    assert did_registry.is_provenance_delegate(Web3.toBytes(hexstr=did_test),
+                                               register_account.address) is False
+    assert did_registry.is_provenance_delegate(Web3.toBytes(hexstr=did_test),
+                                               delegated_account.address) is False
+    assert did_registry.add_did_provenance_delegate(Web3.toBytes(hexstr=did_test),
+                                                    delegated_account.address,
+                                                    register_account) is True
+    assert did_registry.is_provenance_delegate(Web3.toBytes(hexstr=did_test),
+                                               delegated_account.address) is True
+    assert did_registry.remove_did_provenance_delegate(Web3.toBytes(hexstr=did_test),
+                                                       delegated_account.address,
+                                                       register_account) is True
+    assert did_registry.is_provenance_delegate(Web3.toBytes(hexstr=did_test),
+                                               delegated_account.address) is False
+
+
+def test_search_multiple_provenance_event_tests():
+    did_registry = DIDRegistry.get_instance()
+    w3 = Web3
+    did_test = new_did()
+    register_account = get_publisher_account()
+    checksum_test = w3.keccak(text='checksum')
+    activity_id = new_did()
+    provenance_id = new_did()
+    derived_did = new_did()
+    url = 'http://localhost:5000'
+    test_address = w3.toChecksumAddress('068ed00cf0441e4829d9784fcbe7b9e26d4bd8d0')
+
+    assert did_registry.register(did_test, checksum_test, url=url, account=register_account,
+                                 providers=[test_address], activity_id=activity_id) is True
+
+    did_registry.used(provenance_id, did_test, register_account.address, activity_id, "",
+                      account=register_account, attributes="used test")
+
+    did_registry.was_derived_from(new_did(), derived_did, did_test, register_account.address,
+                                  activity_id,
+                                  account=register_account, attributes="was derived from")
+
+    did_registry.was_associated_with(new_did(), did_test, register_account.address, activity_id,
+                                     account=register_account, attributes="was associated with")
+
+    did_registry.acted_on_behalf(new_did(), did_test, register_account.address, register_account.address, activity_id, '',
+                                     account=register_account, attributes="acted on behalf")
+
+    assert len(did_registry.get_provenance_method_events('WAS_GENERATED_BY',
+                                                         Web3.toBytes(hexstr=did_test))) == 1
+    assert len(
+        did_registry.get_provenance_method_events('USED', Web3.toBytes(hexstr=did_test))) == 1
+    assert len(did_registry.get_provenance_method_events('WAS_DERIVED_FROM',
+                                                         Web3.toBytes(hexstr=derived_did))) == 1
+    assert len(did_registry.get_provenance_method_events('WAS_ASSOCIATED_WITH',
+                                                         Web3.toBytes(hexstr=did_test))) == 1
+
+    assert len(did_registry.get_provenance_method_events('ACTED_ON_BEHALF',
+                                                         Web3.toBytes(hexstr=did_test))) == 1

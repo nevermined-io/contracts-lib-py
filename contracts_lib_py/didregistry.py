@@ -7,22 +7,30 @@ from web3 import Web3
 from contracts_lib_py.contract_base import ContractBase
 from contracts_lib_py.event_filter import EventFilter
 from contracts_lib_py.exceptions import DIDNotFound
+from contracts_lib_py.web3_provider import Web3Provider
 
 logger = logging.getLogger(__name__)
 
 DIDRegisterValues = namedtuple(
     'DIDRegisterValues',
-    ('owner', 'last_checksum', 'last_updated_by', 'block_number_updated', 'providers')
+    ('owner', 'last_checksum', 'url', 'last_updated_by', 'block_number_updated', 'providers')
 )
 
 
 class DIDRegistry(ContractBase):
     """Class to register and update DID's."""
     DID_REGISTRY_EVENT_NAME = 'DIDAttributeRegistered'
+    PROVENANCE_ATTRIBUTE_REGISTERED_EVENT_NAME = 'ProvenanceAttributeRegistered'
+    PROVENANCE_USED_EVENT_NAME = 'Used'
+    PROVENANCE_WAS_GENERATED_BY_EVENT_NAME = 'WasGeneratedBy'
+    PROVENANCE_WAS_DERIVED_FROM_EVENT_NAME = 'WasDerivedFrom'
+    PROVENANCE_WAS_ASSOCIATED_WITH_EVENT_NAME = 'WasAssociatedWith'
+    PROVENANCE_ACTED_ON_BEHALF_EVENT_NAME = 'ActedOnBehalf'
 
     CONTRACT_NAME = 'DIDRegistry'
 
-    def register(self, did, checksum, url, account, providers=None):
+    def register(self, did, checksum, url, account, providers=None, activity_id=None,
+                 attributes=None):
         """
         Register or update a DID on the block chain using the DIDRegistry smart contract.
 
@@ -32,6 +40,7 @@ class DIDRegistry(ContractBase):
         :param account: instance of Account to use to register/update the DID
         :param providers: list of addresses of providers to be allowed to serve the asset and play
             a part in creating and fulfilling service agreements
+        :param activity_id: id of the activity tracked in the provenance.
         :return: Receipt
         """
         if isinstance(did, bytes):
@@ -63,8 +72,8 @@ class DIDRegistry(ContractBase):
         if account is None:
             raise ValueError('You must provide an account to use to register a DID')
 
-        transaction = self._register_attribute(
-            did_source_id, checksum, url, account, providers or []
+        transaction = self._register_did(
+            did_source_id, checksum, providers or [], url, account, activity_id, attributes
         )
         receipt = self.get_tx_receipt(transaction)
         if receipt:
@@ -75,27 +84,6 @@ class DIDRegistry(ContractBase):
         _filters['_owner'] = Web3.toBytes(hexstr=account.address)
         event = self.subscribe_to_event(self.DID_REGISTRY_EVENT_NAME, 15, _filters, wait=True)
         return event is not None
-
-    def _register_attribute(self, did, checksum, value, account, providers):
-        """Register an DID attribute as an event on the block chain.
-
-        :param did: 32 byte string/hex of the DID
-        :param checksum: checksum of the ddo, hex str
-        :param value: url for resolve the did, str
-        :param account: account owner of this DID registration record
-        :param providers: list of providers addresses
-        """
-        assert isinstance(providers, list), ''
-        return self.send_transaction(
-            'registerAttribute',
-            (did,
-             checksum,
-             providers,
-             value),
-            transact={'from': account.address,
-                      'passphrase': account.password,
-                      'keyfile': account.key_file}
-        )
 
     def get_block_number_updated(self, did):
         """Return the block number the last did was updated on the block chain."""
@@ -232,11 +220,13 @@ class DIDRegistry(ContractBase):
             None if asset has no registerd providers
         """
         register_values = self.contract.caller.getDIDRegister(did)
-        if register_values and len(register_values) == 5 and register_values[0]:
+        print(register_values)
+        if register_values and len(register_values) == 6 and register_values[0]:
             # sanitize providers list, because if providers were removed they will
             # be replaced with null/None
-            valid_providers = [a for a in register_values[4] if a != '0x0000000000000000000000000000000000000000']
-            register_values[4] = valid_providers
+            valid_providers = [a for a in register_values[5] if
+                               a != '0x0000000000000000000000000000000000000000']
+            register_values[5] = valid_providers
             return DIDRegisterValues(*register_values).providers
 
     def get_owner_asset_ids(self, address):
@@ -246,7 +236,7 @@ class DIDRegistry(ContractBase):
         :param address: ethereum account address, hex str
         :return:
         """
-        block_filter = self._get_event_filter(owner=address)
+        block_filter = self._get_event_filter(DIDRegistry.DID_REGISTRY_EVENT_NAME, owner=address)
         log_items = block_filter.get_all_entries(max_tries=5)
         did_list = []
         for log_i in log_items:
@@ -289,11 +279,13 @@ class DIDRegistry(ContractBase):
                 f'Also ensure that sufficient time has passed after registering the asset '
                 f'such that the transaction is confirmed by the network validators.')
 
-        block_filter = self._get_event_filter(did=did, from_block=block_number,
+        block_filter = self._get_event_filter(DIDRegistry.DID_REGISTRY_EVENT_NAME, did=did,
+                                              from_block=block_number,
                                               to_block=block_number)
         log_items = block_filter.get_all_entries(max_tries=5)
         if not log_items:
-            block_filter = self._get_event_filter(did=did, from_block=block_number - 1,
+            block_filter = self._get_event_filter(DIDRegistry.DID_REGISTRY_EVENT_NAME, did=did,
+                                                  from_block=block_number - 1,
                                                   to_block=block_number + 1)
             log_items = block_filter.get_all_entries(max_tries=3)
 
@@ -313,18 +305,247 @@ class DIDRegistry(ContractBase):
                            f'did {did} at blockNumber {block_number}')
         return result
 
-    def _get_event_filter(self, did=None, owner=None, from_block=0, to_block='latest'):
+    def _register_did(self, did, checksum, providers, url, account, activity_id=None,
+                      attributes=None):
+        assert isinstance(providers, list), ''
+        return self.send_transaction(
+            'registerDID',
+            (did,
+             checksum,
+             providers,
+             url,
+             activity_id or '',
+             attributes or ''),
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+
+    def used(self, prov_id, did, agent_id, activity_id, signature, account, attributes=None):
+        tx_hash = self.send_transaction(
+            'used',
+            (prov_id,
+             did,
+             agent_id,
+             activity_id,
+             signature,
+             attributes),
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+
+        return Web3Provider.get_web3().eth.waitForTransactionReceipt(tx_hash, timeout=20)
+
+    def was_derived_from(self, prov_id, new_entity_did, used_entity_did, agent_id, activity_id,
+                         account, attributes=None):
+        tx_hash = self.send_transaction(
+            'wasDerivedFrom',
+            (prov_id,
+             new_entity_did,
+             used_entity_did,
+             agent_id,
+             activity_id,
+             attributes),
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+
+        return Web3Provider.get_web3().eth.waitForTransactionReceipt(tx_hash, timeout=20)
+
+    def was_associated_with(self, prov_id, did, agent_id, activity_id,
+                            account, attributes=None):
+        tx_hash = self.send_transaction(
+            'wasAssociatedWith',
+            (prov_id,
+             did,
+             agent_id,
+             activity_id,
+             attributes),
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+        return Web3Provider.get_web3().eth.waitForTransactionReceipt(tx_hash, timeout=20)
+
+    def acted_on_behalf(self, prov_id, did, delegate_agent_id, responsible_agent_id, activity_id,
+                        signature, account, attributes=None):
+        tx_hash =  self.send_transaction(
+            'actedOnBehalf',
+            (prov_id,
+             did,
+             delegate_agent_id,
+             responsible_agent_id,
+             activity_id,
+             signature,
+             attributes),
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+        return Web3Provider.get_web3().eth.waitForTransactionReceipt(tx_hash, timeout=20)
+
+
+    def add_did_provenance_delegate(self, did, delegate, account):
+        tx_hash = self.send_transaction(
+            'addDIDProvenanceDelegate',
+            (did,
+             delegate),
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+        return self.is_tx_successful(tx_hash)
+
+    def remove_did_provenance_delegate(self, did, delegate, account):
+        tx_hash = self.send_transaction(
+            'removeDIDProvenanceDelegate',
+            (did,
+             delegate),
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+        return self.is_tx_successful(tx_hash)
+
+    def is_provenance_delegate(self, did, delegate):
+        return self.contract.caller.isProvenanceDelegate(did, delegate)
+
+    def get_provenance_owner(self, did):
+        return self.contract.caller.getProvenanceOwner(did)
+
+    def is_provenance_signature_correct(self, agent_id, hash, signature):
+        return self.contract.caller.provenanceSignatureIsCorrect(agent_id, hash, signature)
+
+    def get_provenance_entry(self, prov_id):
+        provenance_entry = self.contract.caller.getProvenanceEntry(prov_id)
+        return {'did': Web3.toHex(provenance_entry[0]),
+                'related_did': Web3.toHex(provenance_entry[1]),
+                'agent_id': provenance_entry[2],
+                'activity_id': Web3.toHex(provenance_entry[3]),
+                'agent_involved_id': provenance_entry[4],
+                'method': provenance_entry[5],
+                'created_by': provenance_entry[6],
+                'block_number_updated': provenance_entry[7],
+                'signature': provenance_entry[8]
+                }
+
+    def get_did_provenance_events(self, did_bytes):
+        result = []
+        did = Web3.toHex(did_bytes)
+        block_filter = self._get_event_filter(
+            DIDRegistry.PROVENANCE_ATTRIBUTE_REGISTERED_EVENT_NAME,
+            did=did,
+            from_block=0,
+            to_block='latest')
+        log_items = block_filter.get_all_entries(max_tries=5)
+        if log_items:
+            for i in range(len(log_items)):
+                log_item = log_items[i].args
+                block_number = log_item['_blockNumberUpdated']
+                result.append({
+                    'prov_id': log_item['provId'],
+                    'did_bytes': log_item['_did'],
+                    'agent_id': Web3.toChecksumAddress(log_item['_agentId']),
+                    'activity_id': log_item['_activityId'],
+                    'method': log_item['_method'],
+                    'related_did': log_item['_relatedDid'],
+                    'agent_involvedId': log_item['_agentInvolvedId'],
+                    'attributes': log_item['_attributes'],
+                    'block_number': block_number,
+
+                })
+        else:
+            logger.warning(
+                f'Could not find {DIDRegistry.PROVENANCE_ATTRIBUTE_REGISTERED_EVENT_NAME} event '
+                f'logs for '
+                f'did {did} at blockNumber ')
+        return result
+
+    def get_provenance_method_events(self, method, did_bytes):
+        result = []
+        did = Web3.toHex(did_bytes)
+        try:
+            event_name = self._method_mapper(method)
+        except Exception as e:
+            raise Exception(f'Provenance mapping exception: {e}')
+        block_filter = self._get_event_filter(
+            event_name,
+            did=did
+        )
+        log_items = block_filter.get_all_entries(max_tries=5)
+        if log_items:
+            for i in range(len(log_items)):
+                log_item = log_items[i].args
+                block_number = log_item['_blockNumberUpdated']
+                result.append({
+                    'prov_id': log_item['provId'],
+                    'did_bytes': did_bytes,
+                    'agent_id': log_item.get('_agentId', None),
+                    'activity_id': log_item['_activityId'],
+                    'method': method,
+                    'related_did': log_item.get('_relatedDid', None),
+                    'agent_involvedId': log_item.get('_agentInvolvedId', None),
+                    'attributes': log_item['_attributes'],
+                    'block_number': block_number,
+
+                })
+        else:
+            logger.warning(
+                f'Could not find {DIDRegistry.PROVENANCE_ATTRIBUTE_REGISTERED_EVENT_NAME} event '
+                f'logs for '
+                f'did {did} at blockNumber')
+        return result
+
+    def _get_event_filter(self, event_name, did=None, owner=None, from_block=0, to_block='latest'):
         _filters = {}
-        if did is not None:
-            _filters['_did'] = Web3.toBytes(hexstr=did)
-        if owner is not None:
-            _filters['_owner'] = Web3.toBytes(hexstr=owner)
+        if event_name == DIDRegistry.PROVENANCE_WAS_DERIVED_FROM_EVENT_NAME:
+            _filters['_newEntityDid'] = Web3.toBytes(hexstr=did)
+        elif event_name == DIDRegistry.PROVENANCE_WAS_ASSOCIATED_WITH_EVENT_NAME or event_name == DIDRegistry.PROVENANCE_ACTED_ON_BEHALF_EVENT_NAME:
+            _filters['_entityDid'] = Web3.toBytes(hexstr=did)
+        else:
+            if did is not None:
+                _filters['_did'] = Web3.toBytes(hexstr=did)
+            if owner is not None:
+                _filters['_owner'] = Web3.toBytes(hexstr=owner)
 
         block_filter = EventFilter(
-            DIDRegistry.DID_REGISTRY_EVENT_NAME,
-            getattr(self.events, DIDRegistry.DID_REGISTRY_EVENT_NAME),
+            event_name,
+            getattr(self.events, event_name),
             from_block=from_block,
             to_block=to_block,
-            argument_filters=_filters
+            argument_filters=_filters,
         )
         return block_filter
+
+    @staticmethod
+    def _method_mapper(method):
+        if method == 'ENTITY':
+            raise ValueError(f'Method {method} not implemented')
+        if method == 'ACTIVITY':
+            raise ValueError(f'Method {method} not implemented')
+        if method == 'WAS_GENERATED_BY':
+            return DIDRegistry.PROVENANCE_WAS_GENERATED_BY_EVENT_NAME
+        if method == 'USED':
+            return DIDRegistry.PROVENANCE_USED_EVENT_NAME
+        if method == 'WAS_INFORMED_BY':
+            raise ValueError(f'Method {method} not implemented')
+        if method == 'WAS_STARTED_BY':
+            raise ValueError(f'Method {method} not implemented')
+        if method == 'WAS_ENDED_BY':
+            raise ValueError(f'Method {method} not implemented')
+        if method == 'WAS_INVALIDATED_BY':
+            raise ValueError(f'Method {method} not implemented')
+        if method == 'WAS_DERIVED_FROM':
+            return DIDRegistry.PROVENANCE_WAS_DERIVED_FROM_EVENT_NAME
+        if method == 'AGENT':
+            raise ValueError(f'Method {method} not implemented')
+        if method == 'WAS_ATTRIBUTED_TO':
+            raise ValueError(f'Method {method} not implemented')
+        if method == 'WAS_ASSOCIATED_WITH':
+            return DIDRegistry.PROVENANCE_WAS_ASSOCIATED_WITH_EVENT_NAME
+        if method == 'ACTED_ON_BEHALF':
+            return DIDRegistry.PROVENANCE_ACTED_ON_BEHALF_EVENT_NAME
+        else:
+            raise ValueError(f'Method {method} is not implemented in the provenance specificacion.')
