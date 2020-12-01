@@ -482,11 +482,11 @@ class DIDRegistry(ContractBase):
                 result.append({
                     'prov_id': log_item['provId'],
                     'did_bytes': did_bytes,
-                    # 'agent_id': Web3.toChecksumAddress(log_item['_agentId']),
-                    # 'activity_id': log_item['_activityId'],
-                    # 'method': log_item['_method'],
-                    # 'related_did': log_item['_relatedDid'],
-                    # 'agent_involvedId': log_item['_agentInvolvedId'],
+                    'agent_id': log_item.get('_agentId', None),
+                    'activity_id': log_item['_activityId'],
+                    'method': method,
+                    'related_did': log_item.get('_relatedDid', None),
+                    'agent_involvedId': log_item.get('_agentInvolvedId', None),
                     'attributes': log_item['_attributes'],
                     'block_number': block_number,
 
