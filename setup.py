@@ -81,6 +81,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/nevermined-io/contracts-lib-py',
-    version='0.5.1',
+    version='0.5.2',
     zip_safe=False,
 )
