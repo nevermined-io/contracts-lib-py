@@ -18,7 +18,7 @@ with open('CHANGELOG.md') as history_file:
 # or pip install -e .
 install_requirements = [
     'nevermined-contracts==0.5.2',
-    'web3==5.9.0',
+    'web3==5.13.0',
     'requests==2.21.0',
 ]
 
