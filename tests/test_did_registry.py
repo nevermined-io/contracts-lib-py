@@ -290,7 +290,7 @@ def test_nft():
 
     did_registry.mint(did_test, 10, account=register_account)
     assert balance + 10 == did_registry.balance(register_account.address, did_test)
-    assert did_registry.transfer(did_test, someone_address, 1, register_account)
+    assert did_registry.transfer_nft(did_test, someone_address, 1, register_account)
     assert did_registry.balance(register_account.address, did_test) == 10
     assert did_registry.balance(someone_address, did_test) == balance_consumer + 1
     did_registry.burn(did_test, 9, account=register_account)

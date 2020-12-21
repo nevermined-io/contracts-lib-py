@@ -521,7 +521,7 @@ class DIDRegistry(ContractBase):
     def balance(self, address, did):
         return self.contract.caller.balanceOf(address, did)
 
-    def transfer(self, did, address, amount, account):
+    def transfer_nft(self, did, address, amount, account):
         tx_hash = self.send_transaction(
             'safeTransferFrom',
             (account.address,
