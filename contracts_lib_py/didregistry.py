@@ -371,7 +371,7 @@ class DIDRegistry(ContractBase):
 
     def acted_on_behalf(self, prov_id, did, delegate_agent_id, responsible_agent_id, activity_id,
                         signature, account, attributes=None):
-        tx_hash =  self.send_transaction(
+        tx_hash = self.send_transaction(
             'actedOnBehalf',
             (prov_id,
              did,
@@ -385,7 +385,6 @@ class DIDRegistry(ContractBase):
                       'keyfile': account.key_file}
         )
         return Web3Provider.get_web3().eth.waitForTransactionReceipt(tx_hash, timeout=20)
-
 
     def add_did_provenance_delegate(self, did, delegate, account):
         tx_hash = self.send_transaction(
@@ -497,6 +496,45 @@ class DIDRegistry(ContractBase):
                 f'logs for '
                 f'did {did} at blockNumber')
         return result
+
+    def mint(self, did, amount, account):
+        tx_hash = self.send_transaction(
+            'mint',
+            (did, amount),
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+
+        return self.is_tx_successful(tx_hash)
+
+    def burn(self, did, amount, account):
+        tx_hash = self.send_transaction(
+            'burn',
+            (did, amount),
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+        return self.is_tx_successful(tx_hash)
+
+    def balance(self, address, did):
+        return self.contract.caller.balanceOf(address, did)
+
+    def transfer_nft(self, did, address, amount, account):
+        tx_hash = self.send_transaction(
+            'safeTransferFrom',
+            (account.address,
+             address,
+             int(did, 16),
+             amount,
+             Web3.toBytes(text='')
+             ),
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+        return self.is_tx_successful(tx_hash)
 
     def _get_event_filter(self, event_name, did=None, owner=None, from_block=0, to_block='latest'):
         _filters = {}

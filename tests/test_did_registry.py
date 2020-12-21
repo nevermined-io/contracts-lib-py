@@ -252,8 +252,9 @@ def test_search_multiple_provenance_event_tests():
     did_registry.was_associated_with(new_did(), did_test, register_account.address, activity_id,
                                      account=register_account, attributes="was associated with")
 
-    did_registry.acted_on_behalf(new_did(), did_test, register_account.address, register_account.address, activity_id, '',
-                                     account=register_account, attributes="acted on behalf")
+    did_registry.acted_on_behalf(new_did(), did_test, register_account.address,
+                                 register_account.address, activity_id, '',
+                                 account=register_account, attributes="acted on behalf")
 
     assert len(did_registry.get_provenance_method_events('WAS_GENERATED_BY',
                                                          Web3.toBytes(hexstr=did_test))) == 1
@@ -266,3 +267,31 @@ def test_search_multiple_provenance_event_tests():
 
     assert len(did_registry.get_provenance_method_events('ACTED_ON_BEHALF',
                                                          Web3.toBytes(hexstr=did_test))) == 1
+
+
+def test_nft():
+    did_registry = DIDRegistry.get_instance()
+    w3 = Web3
+    did_test = new_did()
+    register_account = get_publisher_account()
+    someone_address = "0x00a329c0648769A73afAc7F9381E08FB43dBEA72"
+    checksum_test = w3.keccak(text='checksum')
+    activity_id = new_did()
+    url = 'http://localhost:5000'
+    test_address = w3.toChecksumAddress('068ed00cf0441e4829d9784fcbe7b9e26d4bd8d0')
+
+    assert did_registry.register(did_test, checksum_test, url=url, account=register_account,
+                                 providers=[test_address], activity_id=activity_id) is True
+
+    balance = did_registry.balance(register_account.address, did_test)
+    assert balance == 1
+    balance_consumer = did_registry.balance(someone_address, did_test)
+    assert balance_consumer == 0
+
+    did_registry.mint(did_test, 10, account=register_account)
+    assert balance + 10 == did_registry.balance(register_account.address, did_test)
+    assert did_registry.transfer_nft(did_test, someone_address, 1, register_account)
+    assert did_registry.balance(register_account.address, did_test) == 10
+    assert did_registry.balance(someone_address, did_test) == balance_consumer + 1
+    did_registry.burn(did_test, 9, account=register_account)
+    assert balance == did_registry.balance(register_account.address, did_test)
