@@ -17,7 +17,7 @@ with open('CHANGELOG.md') as history_file:
 # Installed by pip install contracts-lib-py
 # or pip install -e .
 install_requirements = [
-    'nevermined-contracts==0.5.2',
+    'nevermined-contracts==0.6.0',
     'web3==5.13.0',
     'requests==2.21.0',
 ]
