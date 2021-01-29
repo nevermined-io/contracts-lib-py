@@ -17,7 +17,7 @@ with open('CHANGELOG.md') as history_file:
 # Installed by pip install contracts-lib-py
 # or pip install -e .
 install_requirements = [
-    'nevermined-contracts==0.6.1',
+    'nevermined-contracts==0.6.2',
     'web3==5.13.0',
     'requests==2.21.0',
 ]
@@ -57,7 +57,7 @@ setup(
     author="nevermined-io",
     author_email='root@nevermined.io',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
@@ -81,6 +81,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/nevermined-io/contracts-lib-py',
-    version='0.5.4',
+    version='0.5.5',
     zip_safe=False,
 )
