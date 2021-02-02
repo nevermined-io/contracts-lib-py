@@ -79,7 +79,7 @@ class ContractBase(object):
         Calculate the checksum of an addresses array
 
         :param address: Address, hex str[]
-        :return: address, hex str
+        :return: address, hex str[]
         """
 
         hash = []
