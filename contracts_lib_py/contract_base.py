@@ -74,6 +74,20 @@ class ContractBase(object):
         return Web3.toChecksumAddress(address)
 
     @staticmethod
+    def to_checksum_addresses(addresses):
+        """
+        Calculate the checksum of an addresses array
+
+        :param address: Address, hex str[]
+        :return: address, hex str[]
+        """
+
+        hash = []
+        for address in addresses:
+            hash.append(Web3.toChecksumAddress(address))
+        return hash
+
+    @staticmethod
     def get_tx_receipt(tx_hash):
         """
         Get the receipt of a tx.

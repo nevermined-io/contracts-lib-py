@@ -1,5 +1,6 @@
 from contracts_lib_py.conditions.condition_base import ConditionBase
 
+from contracts_lib_py import utils
 
 class EscrowRewardCondition(ConditionBase):
     """Class representing the EscrowReward contract."""
@@ -7,8 +8,8 @@ class EscrowRewardCondition(ConditionBase):
 
     def fulfill(self,
                 agreement_id,
-                amount,
-                receiver_address,
+                amounts,
+                receivers,
                 sender_address,
                 lock_condition_id,
                 release_condition_id,
@@ -17,8 +18,8 @@ class EscrowRewardCondition(ConditionBase):
         Fulfill the escrow reward condition.
 
         :param agreement_id: id of the agreement, hex str
-        :param amount: Amount of tokens, int
-        :param receiver_address: ethereum address of the receiver, hex str
+        :param amounts: Array of amount of tokens to distribute, int
+        :param receivers: Array of ethereum address of the receivers, hex str
         :param sender_address: ethereum address of the sender, hex str
         :param lock_condition_id: id of the condition, str
         :param release_condition_id: id of the condition, str
@@ -27,8 +28,8 @@ class EscrowRewardCondition(ConditionBase):
         """
         return self._fulfill(
             agreement_id,
-            amount,
-            receiver_address,
+            amounts,
+            receivers,
             sender_address,
             lock_condition_id,
             release_condition_id,
@@ -37,22 +38,23 @@ class EscrowRewardCondition(ConditionBase):
                       'keyfile': account.key_file}
         )
 
-    def hash_values(self, amount, receiver_address, sender_address, lock_condition_id,
+    def hash_values(self, amounts, receivers, sender_address, lock_condition_id,
                     release_condition_id):
         """
         Hash the values of the escrow reward condition.
 
-        :param amount: Amount of tokens, int
-        :param receiver_address: ethereum address of the receiver, hex str
+        :param amounts: Array of amount of tokens to distribute, int
+        :param receivers: Array of ethereum address of the receivers, hex str
         :param sender_address: ethereum address of the sender, hex str
         :param lock_condition_id: id of the condition, str
         :param release_condition_id: id of the condition, str
         :return: hex str
         """
         return self._hash_values(
-            amount,
-            receiver_address,
+            amounts,
+            self.to_checksum_addresses(receivers),
             sender_address,
             lock_condition_id,
             release_condition_id
         )
+
