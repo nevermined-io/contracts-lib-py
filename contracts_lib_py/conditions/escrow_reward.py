@@ -1,5 +1,6 @@
 from contracts_lib_py.conditions.condition_base import ConditionBase
 
+from contracts_lib_py import utils
 
 class EscrowRewardCondition(ConditionBase):
     """Class representing the EscrowReward contract."""
@@ -51,8 +52,9 @@ class EscrowRewardCondition(ConditionBase):
         """
         return self._hash_values(
             amounts,
-            receivers,
+            self.to_checksum_addresses(receivers),
             sender_address,
             lock_condition_id,
             release_condition_id
         )
+
