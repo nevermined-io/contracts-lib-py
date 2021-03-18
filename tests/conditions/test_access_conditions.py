@@ -5,7 +5,7 @@ from contracts_lib_py.conditions.access import AccessCondition
 from tests.resources.helper_functions import get_consumer_account
 
 
-def test_access_secret_store_condition_contract():
+def test_access_condition_contract():
     access_secret_store_condition = AccessCondition('AccessCondition')
     assert access_secret_store_condition
     assert isinstance(access_secret_store_condition, AccessCondition), \
