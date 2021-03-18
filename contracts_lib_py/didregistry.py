@@ -13,7 +13,8 @@ logger = logging.getLogger(__name__)
 
 DIDRegisterValues = namedtuple(
     'DIDRegisterValues',
-    ('owner', 'last_checksum', 'url', 'last_updated_by', 'block_number_updated', 'providers')
+    ('owner', 'last_checksum', 'url', 'last_updated_by', 'block_number_updated', 'providers',
+     'nft_supply', 'mint_cap', 'royalties')
 )
 
 
@@ -29,8 +30,29 @@ class DIDRegistry(ContractBase):
 
     CONTRACT_NAME = 'DIDRegistry'
 
+    def registerMintableDID(self, did, checksum, url, cap, royalties, account, providers=None, activity_id=None,
+                            attributes=None):
+        """
+        Register a mintable DID using the DIDRegistry smart contract.
+
+        :param did: DID to register/update, can be a 32 byte or hexstring
+        :param checksum: hex str hash of TODO
+        :param url: URL of the resolved DID
+        :param account: instance of Account to use to register/update the DID
+        :param cap: refers to the mint cap
+        :param royalties: refers to the royalties to reward to the DID creator in the secondary market
+        :param providers: list of addresses of providers to be allowed to serve the asset and play
+            a part in creating and fulfilling service agreements
+        :param activity_id: id of the activity tracked in the provenance.
+        :param attributes: additional provenance attributes
+        :return: Receipt
+        """
+        return self.register(did, checksum, url, account,
+                             cap=cap, royalties=royalties, attributes=attributes,
+                             providers=providers, activity_id=activity_id)
+
     def register(self, did, checksum, url, account, providers=None, activity_id=None,
-                 attributes=None):
+                 attributes=None, cap=None, royalties=None):
         """
         Register or update a DID on the block chain using the DIDRegistry smart contract.
 
@@ -41,6 +63,9 @@ class DIDRegistry(ContractBase):
         :param providers: list of addresses of providers to be allowed to serve the asset and play
             a part in creating and fulfilling service agreements
         :param activity_id: id of the activity tracked in the provenance.
+        :param cap: refers to the mint cap
+        :param royalties: refers to the royalties to reward to the DID creator in the secondary market
+        :param attributes: additional provenance attributes
         :return: Receipt
         """
         if isinstance(did, bytes):
@@ -72,9 +97,14 @@ class DIDRegistry(ContractBase):
         if account is None:
             raise ValueError('You must provide an account to use to register a DID')
 
-        transaction = self._register_did(
-            did_source_id, checksum, providers or [], url, account, activity_id, attributes
-        )
+        if cap is not None or royalties is not None:
+            transaction = self._register_mintable_did(
+                did_source_id, checksum, providers or [], url, account, cap, royalties, activity_id, attributes
+            )
+        else:
+            transaction = self._register_did(
+                did_source_id, checksum, providers or [], url, account, activity_id, attributes
+            )
         receipt = self.get_tx_receipt(transaction)
         if receipt:
             return receipt.status == 1
@@ -221,7 +251,7 @@ class DIDRegistry(ContractBase):
         """
         register_values = self.contract.caller.getDIDRegister(did)
         print(register_values)
-        if register_values and len(register_values) == 6 and register_values[0]:
+        if register_values and len(register_values) >= 6 and register_values[0]:
             # sanitize providers list, because if providers were removed they will
             # be replaced with null/None
             valid_providers = [a for a in register_values[5] if
@@ -314,6 +344,24 @@ class DIDRegistry(ContractBase):
              checksum,
              providers,
              url,
+             activity_id or '',
+             attributes or ''),
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+
+    def _register_mintable_did(self, did, checksum, providers, url, account, cap, royalties, activity_id=None,
+                      attributes=None):
+        assert isinstance(providers, list), ''
+        return self.send_transaction(
+            'registerMintableDID',
+            (did,
+             checksum,
+             providers,
+             url,
+             cap,
+             royalties,
              activity_id or '',
              attributes or ''),
             transact={'from': account.address,

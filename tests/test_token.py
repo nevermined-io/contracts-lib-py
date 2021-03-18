@@ -2,7 +2,7 @@
 import pytest
 from web3 import Web3
 
-from contracts_lib_py.conditions import LockRewardCondition
+from contracts_lib_py.conditions import LockPaymentCondition
 from contracts_lib_py.token import Token
 from contracts_lib_py.keeper import Keeper
 from tests.resources.helper_functions import get_consumer_account, get_publisher_account, get_network_name
@@ -54,7 +54,7 @@ def test_token_approve_invalid_tokens():
 
 def test_token_allowance():
     token = Token.get_instance()
-    lock_reward_condition = LockRewardCondition(LockRewardCondition.CONTRACT_NAME)
+    lock_reward_condition = LockPaymentCondition(LockPaymentCondition.CONTRACT_NAME)
     allowance = token.get_allowance(consumer_account.address, lock_reward_condition.address)
     if allowance > 0:
         token.decrease_allowance(lock_reward_condition.address, allowance, consumer_account)

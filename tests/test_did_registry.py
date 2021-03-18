@@ -277,21 +277,23 @@ def test_nft():
     someone_address = "0x00a329c0648769A73afAc7F9381E08FB43dBEA72"
     checksum_test = w3.keccak(text='checksum')
     activity_id = new_did()
+    cap = 10
+    royalties = 0
     url = 'http://localhost:5000'
     test_address = w3.toChecksumAddress('068ed00cf0441e4829d9784fcbe7b9e26d4bd8d0')
 
-    assert did_registry.register(did_test, checksum_test, url=url, account=register_account,
-                                 providers=[test_address], activity_id=activity_id) is True
+    assert did_registry.registerMintableDID(did_test, checksum_test, url, cap, royalties, account=register_account,
+                                            providers=[test_address], activity_id=activity_id) is True
 
     balance = did_registry.balance(register_account.address, did_test)
-    assert balance == 1
+    assert balance == 0
     balance_consumer = did_registry.balance(someone_address, did_test)
     assert balance_consumer == 0
 
     did_registry.mint(did_test, 10, account=register_account)
     assert balance + 10 == did_registry.balance(register_account.address, did_test)
     assert did_registry.transfer_nft(did_test, someone_address, 1, register_account)
-    assert did_registry.balance(register_account.address, did_test) == 10
+    assert did_registry.balance(register_account.address, did_test) == 9
     assert did_registry.balance(someone_address, did_test) == balance_consumer + 1
     did_registry.burn(did_test, 9, account=register_account)
     assert balance == did_registry.balance(register_account.address, did_test)

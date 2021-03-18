@@ -5,12 +5,12 @@ from eth_keys.datatypes import Signature
 from eth_utils import big_endian_to_int
 
 from contracts_lib_py.agreements.agreement_manager import AgreementStoreManager
-from contracts_lib_py.conditions.access import AccessSecretStoreCondition
+from contracts_lib_py.conditions.access import AccessCondition
 from contracts_lib_py.conditions.compute_execution import ComputeExecutionCondition
 from contracts_lib_py.conditions.condition_manager import ConditionStoreManager
-from contracts_lib_py.conditions.escrow_reward import EscrowRewardCondition
+from contracts_lib_py.conditions.escrow_reward import EscrowPaymentCondition
 from contracts_lib_py.conditions.hash_lock import HashLockCondition
-from contracts_lib_py.conditions.lock_reward import LockRewardCondition
+from contracts_lib_py.conditions.lock_reward import LockPaymentCondition
 from contracts_lib_py.conditions.sign import SignCondition
 from contracts_lib_py.conditions.threshold import ThresholdCondition
 from contracts_lib_py.conditions.white_listing import WhitelistingCondition
@@ -75,9 +75,9 @@ class Keeper(object):
         self.agreement_manager = AgreementStoreManager.get_instance()
         self.condition_manager = ConditionStoreManager.get_instance()
         self.sign_condition = SignCondition.get_instance()
-        self.lock_reward_condition = LockRewardCondition.get_instance()
-        self.escrow_reward_condition = EscrowRewardCondition.get_instance()
-        self.access_secret_store_condition = AccessSecretStoreCondition.get_instance()
+        self.lock_reward_condition = LockPaymentCondition.get_instance()
+        self.escrow_reward_condition = EscrowPaymentCondition.get_instance()
+        self.access_secret_store_condition = AccessCondition.get_instance()
         self.compute_execution_condition = ComputeExecutionCondition.get_instance()
         self.hash_lock_condition = HashLockCondition.get_instance()
         self.threshold_condition = ThresholdCondition.get_instance()
