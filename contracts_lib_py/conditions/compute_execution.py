@@ -7,7 +7,7 @@ class ComputeExecutionCondition(ConditionBase):
 
     def fulfill(self, agreement_id, did, computer_consumer_address, account):
         """
-        Fulfill the access secret store condition.
+        Fulfill the compute execution condition.
 
         :param agreement_id: id of the agreement, hex str
         :param did: the id of an asset on-chain, hex str

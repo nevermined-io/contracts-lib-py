@@ -2,13 +2,13 @@ from contracts_lib_py.conditions.condition_base import ConditionBase
 from contracts_lib_py.event_filter import EventFilter
 
 
-class AccessSecretStoreCondition(ConditionBase):
-    """Class representing the AccessSecretStoreCondition contract."""
-    CONTRACT_NAME = 'AccessSecretStoreCondition'
+class AccessCondition(ConditionBase):
+    """Class representing the AccessCondition contract."""
+    CONTRACT_NAME = 'AccessCondition'
 
     def fulfill(self, agreement_id, document_id, grantee_address, account):
         """
-        Fulfill the access secret store condition.
+        Fulfill the access condition.
 
         :param agreement_id: id of the agreement, hex str
         :param document_id: refers to the DID in which secret store will issue the decryption
