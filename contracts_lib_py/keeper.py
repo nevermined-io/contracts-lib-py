@@ -17,7 +17,7 @@ from contracts_lib_py.conditions.white_listing import WhitelistingCondition
 from contracts_lib_py.didregistry import DIDRegistry
 from contracts_lib_py.dispenser import Dispenser
 from contracts_lib_py.generic_contract import GenericContract
-from contracts_lib_py.templates.access_secret_store_template import EscrowAccessSecretStoreTemplate
+from contracts_lib_py.templates.access_template import AccessTemplate
 from contracts_lib_py.templates.compute_execution_template import EscrowComputeExecutionTemplate
 from contracts_lib_py.templates.template_manager import TemplateStoreManager
 from contracts_lib_py.token import Token
@@ -70,7 +70,7 @@ class Keeper(object):
 
         self.did_registry = DIDRegistry.get_instance()
         self.template_manager = TemplateStoreManager.get_instance()
-        self.escrow_access_secretstore_template = EscrowAccessSecretStoreTemplate.get_instance()
+        self.escrow_access_secretstore_template = AccessTemplate.get_instance()
         self.escrow_compute_execution_template = EscrowComputeExecutionTemplate.get_instance()
         self.agreement_manager = AgreementStoreManager.get_instance()
         self.condition_manager = ConditionStoreManager.get_instance()

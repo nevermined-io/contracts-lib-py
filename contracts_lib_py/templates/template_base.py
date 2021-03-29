@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class TemplateBase(ContractBase):
-    """Class representing the EscrowAccessSecretStoreTemplate contract."""
+    """Class representing the AccessTemplate contract."""
     AGREEMENT_CREATED_EVENT = 'AgreementCreated'
 
     def create_agreement(self, agreement_id, did, condition_ids, time_locks, time_outs,
