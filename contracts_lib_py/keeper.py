@@ -11,14 +11,20 @@ from contracts_lib_py.conditions.condition_manager import ConditionStoreManager
 from contracts_lib_py.conditions.escrow_reward import EscrowPaymentCondition
 from contracts_lib_py.conditions.hash_lock import HashLockCondition
 from contracts_lib_py.conditions.lock_reward import LockPaymentCondition
+from contracts_lib_py.conditions.nft_holder import NFTHolderCondition
 from contracts_lib_py.conditions.sign import SignCondition
 from contracts_lib_py.conditions.threshold import ThresholdCondition
+from contracts_lib_py.conditions.transfer_did import TransferDIDOwnershipCondition
+from contracts_lib_py.conditions.transfer_nft import TransferNFTCondition
 from contracts_lib_py.conditions.white_listing import WhitelistingCondition
 from contracts_lib_py.didregistry import DIDRegistry
 from contracts_lib_py.dispenser import Dispenser
 from contracts_lib_py.generic_contract import GenericContract
 from contracts_lib_py.templates.access_template import AccessTemplate
 from contracts_lib_py.templates.compute_execution_template import EscrowComputeExecutionTemplate
+from contracts_lib_py.templates.did_sales_template import DIDSalesTemplate
+from contracts_lib_py.templates.nft_access_template import NFTAccessTemplate
+from contracts_lib_py.templates.nft_sales_template import NFTSalesTemplate
 from contracts_lib_py.templates.template_manager import TemplateStoreManager
 from contracts_lib_py.token import Token
 from contracts_lib_py.utils import (add_ethereum_prefix_and_hash_msg, generate_multi_value_hash,
@@ -70,34 +76,46 @@ class Keeper(object):
 
         self.did_registry = DIDRegistry.get_instance()
         self.template_manager = TemplateStoreManager.get_instance()
-        self.escrow_access_secretstore_template = AccessTemplate.get_instance()
+        self.access_template = AccessTemplate.get_instance()
         self.escrow_compute_execution_template = EscrowComputeExecutionTemplate.get_instance()
         self.agreement_manager = AgreementStoreManager.get_instance()
         self.condition_manager = ConditionStoreManager.get_instance()
         self.sign_condition = SignCondition.get_instance()
-        self.lock_reward_condition = LockPaymentCondition.get_instance()
-        self.escrow_reward_condition = EscrowPaymentCondition.get_instance()
-        self.access_secret_store_condition = AccessCondition.get_instance()
+        self.lock_payment_condition = LockPaymentCondition.get_instance()
+        self.escrow_payment_condition = EscrowPaymentCondition.get_instance()
+        self.access_condition = AccessCondition.get_instance()
         self.compute_execution_condition = ComputeExecutionCondition.get_instance()
         self.hash_lock_condition = HashLockCondition.get_instance()
         self.threshold_condition = ThresholdCondition.get_instance()
         self.white_listing_condition = WhitelistingCondition.get_instance()
+        self.nft_holder_condition = NFTHolderCondition.get_instance()
+        self.transfer_nft_condition = TransferNFTCondition.get_instance()
+        self.transfer_did_condition = TransferDIDOwnershipCondition.get_instance()
+        self.nft_access_template = NFTAccessTemplate.get_instance()
+        self.did_sales_template = DIDSalesTemplate.get_instance()
+        self.nft_sales_template = NFTSalesTemplate.get_instance()
         contracts = [
             self.token,
             self.did_registry,
             self.template_manager,
-            self.escrow_access_secretstore_template,
+            self.access_template,
             self.escrow_compute_execution_template,
             self.agreement_manager,
             self.condition_manager,
             self.sign_condition,
-            self.lock_reward_condition,
-            self.escrow_reward_condition,
-            self.access_secret_store_condition,
+            self.lock_payment_condition,
+            self.escrow_payment_condition,
+            self.access_condition,
             self.compute_execution_condition,
             self.hash_lock_condition,
             self.threshold_condition,
-            self.white_listing_condition
+            self.white_listing_condition,
+            self.nft_holder_condition,
+            self.transfer_nft_condition,
+            self.transfer_did_condition,
+            self.nft_access_template,
+            self.did_sales_template,
+            self.nft_sales_template
         ]
         if self.dispenser:
             contracts.append(self.dispenser)
