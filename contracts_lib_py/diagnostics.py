@@ -53,9 +53,9 @@ class Diagnostics:
         keeper = Keeper.get_instance()
         contracts = [keeper.token, keeper.did_registry,
                      keeper.agreement_manager, keeper.template_manager, keeper.condition_manager,
-                     keeper.access_secret_store_condition, keeper.sign_condition,
-                     keeper.lock_reward_condition, keeper.escrow_access_secretstore_template,
-                     keeper.escrow_reward_condition, keeper.hash_lock_condition
+                     keeper.access_condition, keeper.sign_condition,
+                     keeper.lock_payment_condition, keeper.access_template,
+                     keeper.escrow_payment_condition, keeper.hash_lock_condition
                      ]
         addresses = '\n'.join([f'\t{c.name}: {c.address}' for c in contracts])
         logging.info('Finished loading keeper contracts:\n'
