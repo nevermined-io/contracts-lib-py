@@ -269,6 +269,57 @@ def test_search_multiple_provenance_event_tests():
                                                          Web3.toBytes(hexstr=did_test))) == 1
 
 
+def test_royalties_are_valid():
+    did_registry = DIDRegistry.get_instance()
+    w3 = Web3
+    did_test = new_did()
+    register_account = get_publisher_account()
+    checksum_test = w3.keccak(text='checksum')
+    activity_id = new_did()
+    new_owner_address = w3.toChecksumAddress('068ed00cf0441e4829d9784fcbe7b9e26d4bd8d0')
+    someone_address = w3.toChecksumAddress('0x00a329c0648769A73afAc7F9381E08FB43dBEA72')
+    url = 'http://localhost:5000'
+    royalties = 20
+    cap = 0
+
+    assert did_registry.register_mintable_did(did_test, checksum_test, url, cap, royalties, account=register_account,
+                                              providers=[someone_address], activity_id=activity_id) is True
+
+    did_registry.transfer_did_ownership(did_test, new_owner_address, register_account)
+
+    assert did_registry.are_royalties_valid(did_test, [80, 20], [someone_address, register_account.address]) is True
+    assert did_registry.are_royalties_valid(did_test, [90], [someone_address]) is False
+    assert did_registry.are_royalties_valid(did_test, [90, 10], [someone_address, register_account.address]) is False
+
+
+def test_get_did():
+    did_registry = DIDRegistry.get_instance()
+    w3 = Web3
+    did_test = new_did()
+    register_account = get_publisher_account()
+    checksum_test = w3.keccak(text='checksum')
+    activity_id = new_did()
+    someone_address = w3.toChecksumAddress('0x00a329c0648769A73afAc7F9381E08FB43dBEA72')
+    url = 'http://localhost:5000'
+    royalties = 20
+    cap = 0
+
+    assert did_registry.register_mintable_did(did_test, checksum_test, url, cap, royalties, account=register_account,
+                                              providers=[someone_address], activity_id=activity_id) is True
+
+    registered_did = did_registry.get_did_register(did_test)
+    assert registered_did['owner'] == register_account.address
+    assert registered_did['url'] == url
+    assert registered_did['lastUpdatedBy'] == register_account.address
+    assert registered_did['blockNumberUpdated'] > 0
+    assert len(registered_did['providers']) == 1
+    assert registered_did['nftSupply'] == 0
+    assert registered_did['mintCap'] == cap
+    assert registered_did['royalties'] == royalties
+
+
+
+
 def test_nft():
     did_registry = DIDRegistry.get_instance()
     w3 = Web3
@@ -282,8 +333,8 @@ def test_nft():
     url = 'http://localhost:5000'
     test_address = w3.toChecksumAddress('068ed00cf0441e4829d9784fcbe7b9e26d4bd8d0')
 
-    assert did_registry.registerMintableDID(did_test, checksum_test, url, cap, royalties, account=register_account,
-                                            providers=[test_address], activity_id=activity_id) is True
+    assert did_registry.register_mintable_did(did_test, checksum_test, url, cap, royalties, account=register_account,
+                                              providers=[test_address], activity_id=activity_id) is True
 
     balance = did_registry.balance(register_account.address, did_test)
     assert balance == 0

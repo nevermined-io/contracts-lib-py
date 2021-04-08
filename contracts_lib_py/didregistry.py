@@ -30,8 +30,8 @@ class DIDRegistry(ContractBase):
 
     CONTRACT_NAME = 'DIDRegistry'
 
-    def registerMintableDID(self, did, checksum, url, cap, royalties, account, providers=None, activity_id=None,
-                            attributes=None):
+    def register_mintable_did(self, did, checksum, url, cap, royalties, account, providers=None, activity_id=None,
+                              attributes=None):
         """
         Register a mintable DID using the DIDRegistry smart contract.
 
@@ -114,6 +114,16 @@ class DIDRegistry(ContractBase):
         _filters['_owner'] = Web3.toBytes(hexstr=account.address)
         event = self.subscribe_to_event(self.DID_REGISTRY_EVENT_NAME, 15, _filters, wait=True)
         return event is not None
+
+    def are_royalties_valid(self, did, amounts, receivers):
+        """
+        Validates if asset royalties are valid
+        :param did:  Asset did, did
+        :param amounts: amounts to distribute
+        :param receivers: receivers of the amounts
+        :return: boolean
+        """
+        return self.contract.caller.areRoyaltiesValid(did, amounts, receivers)
 
     def get_block_number_updated(self, did):
         """Return the block number the last did was updated on the block chain."""
@@ -464,6 +474,21 @@ class DIDRegistry(ContractBase):
 
     def is_provenance_signature_correct(self, agent_id, hash, signature):
         return self.contract.caller.provenanceSignatureIsCorrect(agent_id, hash, signature)
+
+    def get_did_register(self, did):
+        entry = self.contract.caller.getDIDRegister(did)
+        valid_providers = [a for a in entry[5] if a != '0x0000000000000000000000000000000000000000']
+        return {
+                'owner': entry[0],
+                'lastChecksum': entry[1],
+                'url': entry[2],
+                'lastUpdatedBy': entry[3],
+                'blockNumberUpdated': entry[4],
+                'providers': valid_providers,
+                'nftSupply': entry[6],
+                'mintCap': entry[7],
+                'royalties': entry[8]
+                }
 
     def get_provenance_entry(self, prov_id):
         provenance_entry = self.contract.caller.getProvenanceEntry(prov_id)
