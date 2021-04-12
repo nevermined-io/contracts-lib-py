@@ -6,6 +6,8 @@ import pytest
 from eth_utils import add_0x_prefix
 from web3 import Web3
 
+from contracts_lib_py import Keeper
+from contracts_lib_py.contract_handler import ContractHandler
 from contracts_lib_py.didregistry import DIDRegistry
 from tests.resources.helper_functions import get_consumer_account, get_publisher_account
 
@@ -318,8 +320,6 @@ def test_get_did():
     assert registered_did['royalties'] == royalties
 
 
-
-
 def test_nft():
     did_registry = DIDRegistry.get_instance()
     w3 = Web3
@@ -348,3 +348,18 @@ def test_nft():
     assert did_registry.balance(someone_address, did_test) == balance_consumer + 1
     did_registry.burn(did_test, 9, account=register_account)
     assert balance == did_registry.balance(register_account.address, did_test)
+
+
+def test_nft_approval():
+    did_registry = DIDRegistry.get_instance()
+    w3 = Web3
+    keeper = Keeper(ContractHandler.artifacts_path)
+
+    assert did_registry.is_nft_approved_for_all(w3.toChecksumAddress('068ed00cf0441e4829d9784fcbe7b9e26d4bd8d0'),
+                                                keeper.transfer_nft_condition.address) is True
+
+    assert did_registry.is_nft_approved_for_all(w3.toChecksumAddress('068ed00cf0441e4829d9784fcbe7b9e26d4bd8d0'),
+                                                keeper.did_sales_template.address) is False
+
+
+

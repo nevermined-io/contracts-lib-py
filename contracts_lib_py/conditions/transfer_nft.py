@@ -6,7 +6,7 @@ class TransferNFTCondition(ConditionBase):
     """Class representing the TransferNFTCondition contract."""
     CONTRACT_NAME = 'TransferNFTCondition'
 
-    def fulfill(self, agreement_id, did, receiver_address, nft_amount, reward_address, amounts, receivers, lock_cond_id, account):
+    def fulfill(self, agreement_id, did, receiver_address, nft_amount, lock_cond_id, account):
         """
         Fulfill the NFT Holder condition.
 
@@ -15,9 +15,6 @@ class TransferNFTCondition(ConditionBase):
         keys, DID
         :param receiver_address: is the address of the user to receive the NFT, str
         :param nft_amount: number of NFTs to hold, str
-        :param reward_address: is the address of the user to receive the NFT, str
-        :param amounts: Array of amount of tokens to distribute, int[]
-        :param receivers: Array of ethereum address of the receivers, hex str[]
         :param lock_cond_id: Lock Condition Identifier, str
         :param account: Account instance
         :return: true if the condition was successfully fulfilled, bool
@@ -27,9 +24,6 @@ class TransferNFTCondition(ConditionBase):
             did,
             receiver_address,
             nft_amount,
-            reward_address,
-            amounts,
-            receivers,
             lock_cond_id,
             transact={'from': account.address,
                       'passphrase': account.password,
