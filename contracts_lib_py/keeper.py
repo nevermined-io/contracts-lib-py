@@ -11,6 +11,7 @@ from contracts_lib_py.conditions.condition_manager import ConditionStoreManager
 from contracts_lib_py.conditions.escrow_reward import EscrowPaymentCondition
 from contracts_lib_py.conditions.hash_lock import HashLockCondition
 from contracts_lib_py.conditions.lock_reward import LockPaymentCondition
+from contracts_lib_py.conditions.nft_access import NFTAccessCondition
 from contracts_lib_py.conditions.nft_holder import NFTHolderCondition
 from contracts_lib_py.conditions.sign import SignCondition
 from contracts_lib_py.conditions.threshold import ThresholdCondition
@@ -84,6 +85,7 @@ class Keeper(object):
         self.lock_payment_condition = LockPaymentCondition.get_instance()
         self.escrow_payment_condition = EscrowPaymentCondition.get_instance()
         self.access_condition = AccessCondition.get_instance()
+        self.nft_access_condition = NFTAccessCondition.get_instance()
         self.compute_execution_condition = ComputeExecutionCondition.get_instance()
         self.hash_lock_condition = HashLockCondition.get_instance()
         self.threshold_condition = ThresholdCondition.get_instance()
@@ -106,6 +108,7 @@ class Keeper(object):
             self.lock_payment_condition,
             self.escrow_payment_condition,
             self.access_condition,
+            self.nft_access_condition,
             self.compute_execution_condition,
             self.hash_lock_condition,
             self.threshold_condition,
