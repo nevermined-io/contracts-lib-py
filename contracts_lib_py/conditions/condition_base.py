@@ -5,14 +5,7 @@ from web3 import Web3
 from contracts_lib_py import ContractBase, utils
 from contracts_lib_py.event_filter import EventFilter
 
-logger = logging.getLogger('escrowAccessSecretStoreTemplate')
-
-
-def validate_token_address(token_address):
-    if not Web3.isAddress(token_address):
-        return ConditionBase.ZERO_ADDRESS
-    return token_address
-
+logger = logging.getLogger('accessTemplate')
 
 class ConditionBase(ContractBase):
     """Base class for all the Condition contract objects."""

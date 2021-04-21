@@ -33,9 +33,9 @@ class EscrowPaymentCondition(ConditionBase):
             agreement_id,
             did,
             amounts,
-            receivers,
+            self.to_checksum_addresses(receivers),
             sender_address,
-            ConditionBase.validate_token_address(token_address),
+            self.validate_token_address(token_address),
             lock_condition_id,
             release_condition_id,
             transact={'from': account.address,
@@ -62,7 +62,7 @@ class EscrowPaymentCondition(ConditionBase):
             amounts,
             self.to_checksum_addresses(receivers),
             sender_address,
-            ConditionBase.validate_token_address(token_address),
+            self.validate_token_address(token_address),
             lock_condition_id,
             release_condition_id
         )
