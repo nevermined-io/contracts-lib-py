@@ -17,6 +17,7 @@ logger = logging.getLogger('keeper')
 class ContractBase(object):
     """Base class for all contract objects."""
     CONTRACT_NAME = None
+    ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
     def __init__(self, contract_name, dependencies=None):
 
@@ -86,6 +87,12 @@ class ContractBase(object):
         for address in addresses:
             hash.append(Web3.toChecksumAddress(address))
         return hash
+
+    @staticmethod
+    def validate_token_address(token_address):
+        if token_address is None or not Web3.isAddress(token_address):
+            return ContractBase.ZERO_ADDRESS
+        return token_address
 
     @staticmethod
     def get_tx_receipt(tx_hash):

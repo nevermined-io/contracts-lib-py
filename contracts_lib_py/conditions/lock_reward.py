@@ -19,16 +19,14 @@ class LockPaymentCondition(ConditionBase):
         :param account: Account instance
         :return:
         """
-        if not Web3.isAddress(token_address):
-            token_address = ConditionBase.ZERO_ADDRESS
 
         return self._fulfill(
             agreement_id,
             did,
             reward_address,
-            ConditionBase.validate_token_address(token_address),
+            self.validate_token_address(token_address),
             amounts,
-            receivers,
+            self.to_checksum_addresses(receivers),
             transact={'from': account.address,
                       'passphrase': account.password,
                       'keyfile': account.key_file}
@@ -49,7 +47,7 @@ class LockPaymentCondition(ConditionBase):
         return self._hash_values(
             did,
             reward_address,
-            ConditionBase.validate_token_address(token_address),
+            self.validate_token_address(token_address),
             amounts,
             self.to_checksum_addresses(receivers)
         )
