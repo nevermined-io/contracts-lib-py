@@ -8,9 +8,16 @@ from contracts_lib_py.event_filter import EventFilter
 logger = logging.getLogger('escrowAccessSecretStoreTemplate')
 
 
+def validate_token_address(token_address):
+    if not Web3.isAddress(token_address):
+        return ConditionBase.ZERO_ADDRESS
+    return token_address
+
+
 class ConditionBase(ContractBase):
     """Base class for all the Condition contract objects."""
     FULFILLED_EVENT = 'Fulfilled'
+    ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
     def generate_id(self, agreement_id, types, values):
         """
