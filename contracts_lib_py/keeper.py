@@ -13,6 +13,7 @@ from contracts_lib_py.conditions.hash_lock import HashLockCondition
 from contracts_lib_py.conditions.lock_reward import LockPaymentCondition
 from contracts_lib_py.conditions.nft_access import NFTAccessCondition
 from contracts_lib_py.conditions.nft_holder import NFTHolderCondition
+from contracts_lib_py.conditions.nft_lock_condition import NFTLockCondition
 from contracts_lib_py.conditions.sign import SignCondition
 from contracts_lib_py.conditions.threshold import ThresholdCondition
 from contracts_lib_py.conditions.transfer_did import TransferDIDOwnershipCondition
@@ -91,6 +92,7 @@ class Keeper(object):
         self.threshold_condition = ThresholdCondition.get_instance()
         self.white_listing_condition = WhitelistingCondition.get_instance()
         self.nft_holder_condition = NFTHolderCondition.get_instance()
+        self.nft_lock_condition = NFTLockCondition.get_instance()
         self.transfer_nft_condition = TransferNFTCondition.get_instance()
         self.transfer_did_condition = TransferDIDOwnershipCondition.get_instance()
         self.nft_access_template = NFTAccessTemplate.get_instance()
@@ -114,6 +116,7 @@ class Keeper(object):
             self.threshold_condition,
             self.white_listing_condition,
             self.nft_holder_condition,
+            self.nft_lock_condition,
             self.transfer_nft_condition,
             self.transfer_did_condition,
             self.nft_access_template,
