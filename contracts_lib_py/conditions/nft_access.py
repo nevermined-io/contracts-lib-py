@@ -28,7 +28,7 @@ class NFTAccessCondition(ConditionBase):
 
     def hash_values(self, document_id, grantee_address):
         """
-        Hast the values of the document_id with the grantee address.
+        Hash the values of the document_id with the grantee address.
 
         :param document_id: refers to the DID in which secret store will issue the decryption
         keys, DID
