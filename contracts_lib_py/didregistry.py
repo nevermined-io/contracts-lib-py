@@ -2,6 +2,7 @@ import logging
 from collections import namedtuple
 from urllib.parse import urlparse
 
+from eth_utils import add_0x_prefix
 from web3 import Web3
 
 from contracts_lib_py.contract_base import ContractBase
@@ -30,12 +31,12 @@ class DIDRegistry(ContractBase):
 
     CONTRACT_NAME = 'DIDRegistry'
 
-    def register_mintable_did(self, did, checksum, url, cap, royalties, account, providers=None, activity_id=None,
+    def register_mintable_did(self, did_seed, checksum, url, cap, royalties, account, providers=None, activity_id=None,
                               attributes=None):
         """
         Register a mintable DID using the DIDRegistry smart contract.
 
-        :param did: DID to register/update, can be a 32 byte or hexstring
+        :param did_seed: Seed used to generate the final DID, It's a 32 byte or hexstring
         :param checksum: hex str hash of TODO
         :param url: URL of the resolved DID
         :param account: instance of Account to use to register/update the DID
@@ -47,16 +48,16 @@ class DIDRegistry(ContractBase):
         :param attributes: additional provenance attributes
         :return: Receipt
         """
-        return self.register(did, checksum, url, account,
+        return self.register(did_seed, checksum, url, account,
                              cap=cap, royalties=royalties, attributes=attributes,
                              providers=providers, activity_id=activity_id)
 
-    def register(self, did, checksum, url, account, providers=None, activity_id=None,
+    def register(self, did_seed, checksum, url, account, providers=None, activity_id=None,
                  attributes=None, cap=None, royalties=None):
         """
         Register or update a DID on the block chain using the DIDRegistry smart contract.
 
-        :param did: DID to register/update, can be a 32 byte or hexstring
+        :param did_seed: Seed used to generate the final DID, It's a 32 byte or hexstring
         :param checksum: hex str hash of TODO
         :param url: URL of the resolved DID
         :param account: instance of Account to use to register/update the DID
@@ -68,25 +69,25 @@ class DIDRegistry(ContractBase):
         :param attributes: additional provenance attributes
         :return: Receipt
         """
-        if isinstance(did, bytes):
-            did_source_id = did
-        elif isinstance(did, str):
+        if isinstance(did_seed, bytes):
+            did_source_id = did_seed
+        elif isinstance(did_seed, str):
             try:
-                did_source_id = Web3.toBytes(hexstr=did)
+                did_source_id = Web3.toBytes(hexstr=did_seed)
             except Exception as e:
                 raise TypeError(
                     f'There is a problem with the did type, expecting a str with valid hex only, '
-                    f'got {did}. Make sure to use only the id part of the '
+                    f'got {did_seed}. Make sure to use only the id part of the '
                     f'did without the prefix: {e}')
         else:
-            raise TypeError(f'Unrecognized `did` {did} of type {type(did)}. Expecting a 32 bytes '
+            raise TypeError(f'Unrecognized `did_seed` {did_seed} of type {type(did_seed)}. Expecting a 32 bytes '
                             f'in bytes type or hex str representation.')
 
         if not did_source_id:
-            raise ValueError(f'{did} must be a valid DID to register')
+            raise ValueError(f'{did_seed} must be a valid DID to register')
 
         if not urlparse(url):
-            raise ValueError(f'Invalid URL {url} to register for DID {did}')
+            raise ValueError(f'Invalid URL {url} to register for DID {did_seed}')
 
         if checksum is None:
             checksum = Web3.toBytes(0)
@@ -109,11 +110,22 @@ class DIDRegistry(ContractBase):
         if receipt:
             return receipt.status == 1
 
+        did = self.hash_did(did_source_id, account.address)
+
         _filters = dict()
         _filters['_did'] = Web3.toBytes(hexstr=did)
         _filters['_owner'] = Web3.toBytes(hexstr=account.address)
         event = self.subscribe_to_event(self.DID_REGISTRY_EVENT_NAME, 15, _filters, wait=True)
         return event is not None
+
+    def hash_did(self, did_seed, address):
+        """
+        Calculates the final DID given a DID seed and the publisher address
+        :param did_seed: the hash used to generate the did
+        :param address: the address of the account creating the asset
+        :return: the final DID
+        """
+        return add_0x_prefix(self.contract.caller.hashDID(did_seed, address).hex())
 
     def are_royalties_valid(self, did, amounts, receivers):
         """
