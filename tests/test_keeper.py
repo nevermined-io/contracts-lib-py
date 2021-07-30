@@ -151,3 +151,13 @@ def test_sign_and_recover(web3_instance):
 
     recovered_address = Keeper.personal_ec_recover(doc_id, sig)
     assert recovered_address == publisher_address
+
+
+def test_load_external_contract(external_contract):
+    address, abi, name = external_contract
+    keeper = Keeper.get_instance(external_contracts=[external_contract])
+
+    contract = keeper.get_contract(name)
+    assert contract is not None
+    assert contract.address == address
+    assert contract.CONTRACT_NAME == name

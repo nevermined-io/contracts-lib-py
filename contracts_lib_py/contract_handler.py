@@ -32,6 +32,16 @@ class ContractHandler(object):
         return (ContractHandler._contracts.get(name) or ContractHandler._load(name))[0]
 
     @staticmethod
+    def get_by_address(address, abi, name):
+        """
+        Return the Contract instance for a given name.
+
+        :param name: Contract name, str
+        :return: Contract instance
+        """
+        return (ContractHandler._contracts.get(name) or ContractHandler._load_from_address(address, abi, name))[0]
+
+    @staticmethod
     def get_contract_version(name):
         """
         Return the version of the contract in use.
@@ -76,6 +86,19 @@ class ContractHandler(object):
         abi = contract_definition['abi']
         contract = Web3Provider.get_web3().eth.contract(address=address, abi=abi)
         ContractHandler._contracts[contract_name] = (contract, contract_definition['version'])
+        return ContractHandler._contracts[contract_name]
+
+    @staticmethod
+    def _load_from_address(address, abi, contract_name):
+        """Retrieve the contract instance for `contract_name` that represent the smart
+        contract in the keeper network.
+
+        :param contract_name: str name of the solidity keeper contract without the network name.
+        :return: web3.eth.Contract instance
+        """
+        address = Web3.toChecksumAddress(address)
+        contract = Web3Provider.get_web3().eth.contract(address=address, abi=abi)
+        ContractHandler._contracts[contract_name] = (contract, 'external')
         return ContractHandler._contracts[contract_name]
 
     @staticmethod
