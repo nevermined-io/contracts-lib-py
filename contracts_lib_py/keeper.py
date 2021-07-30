@@ -21,7 +21,7 @@ from contracts_lib_py.conditions.transfer_nft import TransferNFTCondition
 from contracts_lib_py.conditions.white_listing import WhitelistingCondition
 from contracts_lib_py.didregistry import DIDRegistry
 from contracts_lib_py.dispenser import Dispenser
-from contracts_lib_py.generic_contract import GenericContract
+from contracts_lib_py.generic_contract import GenericContract, GenericContractExternal
 from contracts_lib_py.templates.access_template import AccessTemplate
 from contracts_lib_py.templates.compute_execution_template import EscrowComputeExecutionTemplate
 from contracts_lib_py.templates.did_sales_template import DIDSalesTemplate
@@ -54,16 +54,22 @@ class Keeper(object):
         0xcea11: 'pacific'
     }
 
-    def __init__(self, artifacts_path, contract_names=None):
+    def __init__(self, artifacts_path, contract_names=None, external_contracts=[]):
         self.network_name = Keeper.get_network_name(Keeper.get_network_id())
         self.artifacts_path = artifacts_path
         self.accounts = Web3Provider.get_web3().eth.accounts
         self._contract_name_to_instance = {}
+        self._external_contract_name_to_instance = {}
         if contract_names:
             for name in contract_names:
                 contract = GenericContract(name)
                 self._contract_name_to_instance = contract
                 setattr(self, name, contract)
+
+        for (address, abi, name) in external_contracts:
+            contract = GenericContractExternal(address, abi, name)
+            self._external_contract_name_to_instance[name] = contract
+            setattr(self, name, contract)
 
         # make dispenser and token contracts optional
         try:
@@ -129,9 +135,9 @@ class Keeper(object):
                                            for contract in contracts if contract}
 
     @staticmethod
-    def get_instance(artifacts_path=None, contract_names=None):
+    def get_instance(artifacts_path=None, contract_names=None, external_contracts=[]):
         """Return the Keeper instance (singleton)."""
-        return Keeper(artifacts_path, contract_names)
+        return Keeper(artifacts_path, contract_names, external_contracts)
 
     @staticmethod
     def get_network_name(network_id):
@@ -218,8 +224,16 @@ class Keeper(object):
     def contract_name_to_instance(self):
         return self._contract_name_to_instance
 
+    @property
+    def external_contract_name_to_instance(self):
+        return self._external_contract_name_to_instance
+
     def get_contract(self, contract_name):
         contract = self.contract_name_to_instance.get(contract_name)
+        if contract:
+            return contract
+
+        contract = self.external_contract_name_to_instance.get(contract_name)
         if contract:
             return contract
 

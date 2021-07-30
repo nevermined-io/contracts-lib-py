@@ -1,5 +1,4 @@
 from contracts_lib_py.conditions.condition_base import ConditionBase
-from contracts_lib_py.event_filter import EventFilter
 
 
 class NFTHolderCondition(ConditionBase):
