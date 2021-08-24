@@ -2,10 +2,11 @@
 
 # contracts-lib-py
 
-> Wraps keeper contracts and web3 functions.
+> Wraps Nevermined contracts and web3 functions.
 > [nevermined.io](https://nevermined.io)
 
 [![PyPI](https://img.shields.io/pypi/v/contracts-lib-py.svg)](https://pypi.org/project/contracts-lib-py/)
+
 
 ## Attribution
 
