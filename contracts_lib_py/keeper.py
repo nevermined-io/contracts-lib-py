@@ -1,8 +1,8 @@
 import logging
 import os
 
-from eth_keys.datatypes import Signature
 from eth_utils import big_endian_to_int
+import nevermined_contracts
 
 from contracts_lib_py.agreements.agreement_manager import AgreementStoreManager
 from contracts_lib_py.conditions.access import AccessCondition
@@ -41,22 +41,25 @@ class Keeper(object):
 
     DEFAULT_NETWORK_NAME = 'development'
     _network_name_map = {
-        1: 'Main',
+        1: 'mainnet',
         2: 'Morden',
         3: 'Ropsten',
-        4: 'Rinkeby',
+        4: 'rinkeby',
         42: 'Kovan',
         77: 'POA_Sokol',
         99: 'POA_Core',
         8995: 'nile',
         8996: 'spree',
         2199: 'duero',
-        0xcea11: 'pacific'
+        0xcea11: 'pacific',
+        44787: 'celo-alfajores',
+        62320: 'celo-baklava',
+        80001: 'mumbai',
     }
 
-    def __init__(self, artifacts_path, contract_names=None, external_contracts=[]):
+    def __init__(self, artifacts_path=None, contract_names=None, external_contracts=[]):
         self.network_name = Keeper.get_network_name(Keeper.get_network_id())
-        self.artifacts_path = artifacts_path
+        self.artifacts_path = artifacts_path or nevermined_contracts.get_artifacts_path()
         self.accounts = Web3Provider.get_web3().eth.accounts
         self._contract_name_to_instance = {}
         self._external_contract_name_to_instance = {}
