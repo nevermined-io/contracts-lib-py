@@ -1,12 +1,14 @@
 import os
 import pathlib
 
+from web3 import Web3
 
 from contracts_lib_py import Keeper
 from contracts_lib_py.utils import get_account
 from contracts_lib_py.web3_provider import Web3Provider
 from contracts_lib_py.keeper import Keeper
 from contracts_lib_py.contract_handler import ContractHandler
+from contracts_lib_py.web3.http_provider import CustomHTTPProvider
 
 
 
@@ -21,7 +23,7 @@ def get_keeper_url():
 
 
 def setup_keeper():
-    Web3Provider.get_web3(get_keeper_url())
+    Web3Provider._web3 = Web3(CustomHTTPProvider(get_keeper_url()))
     ContractHandler.artifacts_path = os.path.expanduser('~/.nevermined/nevermined-contracts/artifacts')
     Keeper.get_instance(artifacts_path=ContractHandler.artifacts_path)
 

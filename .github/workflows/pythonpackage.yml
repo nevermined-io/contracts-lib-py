@@ -29,12 +29,15 @@ jobs:
         git clone https://github.com/nevermined-io/tools nevermined-tools
         cd nevermined-tools
         rm -rf "${HOME}/.nevermined/nevermined-contracts/artifacts"
-        ./start_nevermined.sh --no-marketplace --no-gateway --no-faucet --no-acl-contract --latest &
+        ./start_nevermined.sh --latest --no-marketplace --no-gateway --no-faucet --no-acl-contract --spree-embedded-contracts &
         cd ..
         ./scripts/wait_for_migration_and_extract_keeper_artifacts.sh
+
+    - name: Install python package
+      run: |
         pip install pip==20.2.4
         pip install -r requirements_dev.txt
-    - name: Test on spree
+    - name: Test
       run: |
         export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
         export PARITY_PASSWORD=node0
