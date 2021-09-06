@@ -30,17 +30,18 @@ class TransferNFTCondition(ConditionBase):
                       'keyfile': account.key_file}
         )
 
-    def hash_values(self, did, receiver_address, nft_amount, lock_cond_id):
+    def hash_values(self, did, nft_holder, receiver_address, nft_amount, lock_cond_id):
         """
         Hast the values of the document_id with the grantee address.
 
         :param did: refers to the DID in which secret store will issue the decryption
         keys, DID
+        :param nft_holder: The current older of the nft
         :param receiver_address: is the address of the user to receive the NFT, str
         :param nft_amount: number of NFTs, str
         :param lock_cond_id: Lock Condition Identifier, str
         :return: hex str
         """
-        return self._hash_values(did, receiver_address, nft_amount, lock_cond_id)
+        return self._hash_values(did, nft_holder, receiver_address, nft_amount, lock_cond_id)
 
 
