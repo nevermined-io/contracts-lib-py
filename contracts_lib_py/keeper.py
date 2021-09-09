@@ -6,6 +6,7 @@ import nevermined_contracts
 
 from contracts_lib_py.agreements.agreement_manager import AgreementStoreManager
 from contracts_lib_py.conditions.access import AccessCondition
+from contracts_lib_py.conditions.access_proof import AccessProofCondition
 from contracts_lib_py.conditions.compute_execution import ComputeExecutionCondition
 from contracts_lib_py.conditions.condition_manager import ConditionStoreManager
 from contracts_lib_py.conditions.escrow_reward import EscrowPaymentCondition
@@ -23,6 +24,7 @@ from contracts_lib_py.didregistry import DIDRegistry
 from contracts_lib_py.dispenser import Dispenser
 from contracts_lib_py.generic_contract import GenericContract, GenericContractExternal
 from contracts_lib_py.templates.access_template import AccessTemplate
+from contracts_lib_py.templates.access_proof_template import AccessProofTemplate
 from contracts_lib_py.templates.compute_execution_template import EscrowComputeExecutionTemplate
 from contracts_lib_py.templates.did_sales_template import DIDSalesTemplate
 from contracts_lib_py.templates.nft_access_template import NFTAccessTemplate
@@ -88,6 +90,7 @@ class Keeper(object):
         self.did_registry = DIDRegistry.get_instance()
         self.template_manager = TemplateStoreManager.get_instance()
         self.access_template = AccessTemplate.get_instance()
+        self.access_proof_template = AccessTemplate.get_instance()
         self.escrow_compute_execution_template = EscrowComputeExecutionTemplate.get_instance()
         self.agreement_manager = AgreementStoreManager.get_instance()
         self.condition_manager = ConditionStoreManager.get_instance()
@@ -95,6 +98,7 @@ class Keeper(object):
         self.lock_payment_condition = LockPaymentCondition.get_instance()
         self.escrow_payment_condition = EscrowPaymentCondition.get_instance()
         self.access_condition = AccessCondition.get_instance()
+        self.access_proof_condition = AccessProofCondition.get_instance()
         self.nft_access_condition = NFTAccessCondition.get_instance()
         self.compute_execution_condition = ComputeExecutionCondition.get_instance()
         self.hash_lock_condition = HashLockCondition.get_instance()
@@ -112,6 +116,7 @@ class Keeper(object):
             self.did_registry,
             self.template_manager,
             self.access_template,
+            self.access_proof_template,
             self.escrow_compute_execution_template,
             self.agreement_manager,
             self.condition_manager,
@@ -119,6 +124,7 @@ class Keeper(object):
             self.lock_payment_condition,
             self.escrow_payment_condition,
             self.access_condition,
+            self.access_proof_condition,
             self.nft_access_condition,
             self.compute_execution_condition,
             self.hash_lock_condition,
