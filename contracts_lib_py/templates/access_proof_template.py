@@ -7,4 +7,4 @@ logger = logging.getLogger('AccessProofTemplate')
 
 class AccessProofTemplate(TemplateBase):
     """Class representing the AccessProofTemplate contract."""
-    CONTRACT_NAME = 'AccessProofsTemplate'
+    CONTRACT_NAME = 'AccessProofTemplate'

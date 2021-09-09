@@ -90,7 +90,7 @@ class Keeper(object):
         self.did_registry = DIDRegistry.get_instance()
         self.template_manager = TemplateStoreManager.get_instance()
         self.access_template = AccessTemplate.get_instance()
-        self.access_proof_template = AccessTemplate.get_instance()
+        self.access_proof_template = AccessProofTemplate.get_instance()
         self.escrow_compute_execution_template = EscrowComputeExecutionTemplate.get_instance()
         self.agreement_manager = AgreementStoreManager.get_instance()
         self.condition_manager = ConditionStoreManager.get_instance()

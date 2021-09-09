@@ -15,15 +15,17 @@ class AccessProofCondition(ConditionBase):
         :param account: Account instance
         :return: true if the condition was successfully fulfilled, bool
         """
+        print([agreement_id, hash, buyer, provider, cipher])
         return self._fulfill(
             agreement_id,
-            hash,
-            buyer,
-            provider,
-            cipher,
-            proof,
+            int(hash, 16),
+            [int(buyer[0], 16), int(buyer[1], 16)],
+            [int(provider[0], 16), int(provider[1], 16)],
+            [int(cipher[0], 16), int(cipher[1], 16)],
+            bytes.fromhex(proof[2:]),
             transact={'from': account.address,
                       'passphrase': account.password,
+                      'gas': 2000000,
                       'keyfile': account.key_file}
         )
 
@@ -36,5 +38,8 @@ class AccessProofCondition(ConditionBase):
         :param grantee_address: is the address of the granted user, str
         :return: hex str
         """
-        return self._hash_values(int(hash, 16), [int(buyer[0], 16), int(buyer[1], 16)], [int(provider[0], 16), int(provider[1], 16)])
+        res = self._hash_values(int(hash, 16), [int(buyer[0], 16), int(buyer[1], 16)], [int(provider[0], 16), int(provider[1], 16)])
+        print('hashed result')
+        print(res)
+        return res
 
