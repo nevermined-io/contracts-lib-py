@@ -162,6 +162,8 @@ class ContractBase(object):
         contract_function = CustomContractFunction(
             contract_fn
         )
+        if transact is not None and 'chainId' not in transact:
+            transact['chainId'] = int(Web3Provider.get_web3().net.version)
         return contract_function.transact(transact)
 
     def get_event_argument_names(self, event_name):
