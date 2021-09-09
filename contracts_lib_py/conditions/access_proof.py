@@ -36,5 +36,5 @@ class AccessProofCondition(ConditionBase):
         :param grantee_address: is the address of the granted user, str
         :return: hex str
         """
-        return self._hash_values(hash, buyer, provider)
+        return self._hash_values(int(hash, 16), [int(buyer[0], 16), int(buyer[1], 16)], [int(provider[0], 16), int(provider[1], 16)])
 
