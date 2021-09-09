@@ -353,6 +353,8 @@ class DIDRegistry(ContractBase):
         return result
 
     def _filter_did_registered_events(self, did_bytes, events):
+        # https://ethereum.stackexchange.com/a/106981/3831
+
         event_template = getattr(self.contract.events, DIDRegistry.DID_REGISTRY_EVENT_NAME)
         for event in events:
             try:
