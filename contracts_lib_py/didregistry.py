@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 
 from eth_utils import add_0x_prefix
 from web3 import Web3
+from web3._utils.events import get_event_data
 
 from contracts_lib_py.contract_base import ContractBase
 from contracts_lib_py.event_filter import EventFilter
@@ -331,31 +332,38 @@ class DIDRegistry(ContractBase):
                 f'Also ensure that sufficient time has passed after registering the asset '
                 f'such that the transaction is confirmed by the network validators.')
 
-        block_filter = self._get_event_filter(DIDRegistry.DID_REGISTRY_EVENT_NAME, did=did,
-                                              from_block=block_number,
-                                              to_block=block_number)
-        log_items = block_filter.get_all_entries(max_tries=5)
-        if not log_items:
-            block_filter = self._get_event_filter(DIDRegistry.DID_REGISTRY_EVENT_NAME, did=did,
-                                                  from_block=block_number - 1,
-                                                  to_block=block_number + 1)
-            log_items = block_filter.get_all_entries(max_tries=3)
+        events = Web3Provider.get_web3().eth.getLogs({
+            'fromBlock': block_number,
+            'toBlock': block_number,
+            'address': self.contract.address
+        })
+        event_data = self._filter_did_registered_events(did_bytes, events)
 
-        if log_items:
-            log_item = log_items[-1].args
-            value = log_item['_value']
-            block_number = log_item['_blockNumberUpdated']
+        if event_data:
             result = {
-                'checksum': log_item['_checksum'],
-                'value': value,
+                'checksum': event_data.args._checksum,
+                'value': event_data.args._value,
                 'block_number': block_number,
-                'did_bytes': log_item['_did'],
-                'owner': Web3.toChecksumAddress(log_item['_owner']),
+                'did_bytes': event_data.args._did,
+                'owner': Web3.toChecksumAddress(event_data.args._owner),
             }
         else:
             logger.warning(f'Could not find {DIDRegistry.DID_REGISTRY_EVENT_NAME} event logs for '
                            f'did {did} at blockNumber {block_number}')
         return result
+
+    def _filter_did_registered_events(self, did_bytes, events):
+        # https://ethereum.stackexchange.com/a/106981/3831
+
+        event_template = getattr(self.contract.events, DIDRegistry.DID_REGISTRY_EVENT_NAME)
+        for event in events:
+            try:
+                event_data  = get_event_data(event_template.web3.codec, event_template._get_event_abi(), event)
+                if event_data['args']['_did'] == did_bytes:
+                    return event_data
+            except Exception:
+                continue
+
 
     def _register_did(self, did, checksum, providers, url, account, activity_id=None,
                       attributes=None):
