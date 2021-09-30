@@ -57,7 +57,7 @@ class Keeper(object):
         44787: 'celo-alfajores',
         62320: 'celo-baklava',
         80001: 'mumbai',
-        1313161554: 'aurora-mainnet',
+        1313161554: 'aurora',
         1313161555: 'aurora-testnet',
         1313161556: 'aurora-betanet'
     }
