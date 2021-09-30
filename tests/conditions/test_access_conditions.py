@@ -2,6 +2,7 @@
 import uuid
 
 from contracts_lib_py.conditions.access import AccessCondition
+from contracts_lib_py.conditions.access_proof import AccessProofCondition
 from contracts_lib_py.conditions.nft_access import NFTAccessCondition
 from tests.resources.helper_functions import get_consumer_account
 
@@ -12,6 +13,11 @@ def test_access_condition_contract():
     assert isinstance(access_condition, AccessCondition), \
         f'{access_condition} is not instance of AccessCondition'
 
+def test_access_proof_condition_contract():
+    access_proof_condition = AccessProofCondition('AccessProofCondition')
+    assert access_proof_condition
+    assert isinstance(access_proof_condition, AccessProofCondition), \
+        f'{access_proof_condition} is not instance of AccessProofCondition'
 
 def test_nft_access_condition_contract():
     nft_access_condition = NFTAccessCondition('NFTAccessCondition')
