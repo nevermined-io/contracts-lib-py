@@ -2,14 +2,7 @@
 import pytest
 
 from contracts_lib_py.dispenser import Dispenser
-from tests.resources.helper_functions import get_consumer_account, get_network_name
-
-
-# skip NeverminedToken tests if not running on the spree network
-pytestmark = pytest.mark.skipif(
-    get_network_name() != "spree",
-    reason="Dispenser tests should only run on the `spree` network"
-)
+from tests.resources.helper_functions import get_consumer_account
 
 
 @pytest.fixture()

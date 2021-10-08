@@ -5,17 +5,10 @@ from web3 import Web3
 from contracts_lib_py.conditions import LockPaymentCondition
 from contracts_lib_py.token import Token
 from contracts_lib_py.keeper import Keeper
-from tests.resources.helper_functions import get_consumer_account, get_publisher_account, get_network_name
+from tests.resources.helper_functions import get_consumer_account, get_publisher_account
 
 consumer_account = get_consumer_account()
 publisher_account = get_publisher_account()
-
-
-# skip NeverminedToken tests if not running on the spree network
-pytestmark = pytest.mark.skipif(
-    get_network_name() != "spree",
-    reason="NeverminedToken tests should only run on the `spree` network"
-)
 
 
 def test_token_contract():
