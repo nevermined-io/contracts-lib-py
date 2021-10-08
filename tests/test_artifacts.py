@@ -11,12 +11,14 @@ from contracts_lib_py.keeper import Keeper
 
 INFURA_TOKEN = os.environ.get("INFURA_TOKEN")
 
+pytestmark = pytest.mark.integration
+
 
 @pytest.mark.parametrize("keeper_url,network_id,network_name", [
     [f"https://mainnet.infura.io/v3/{INFURA_TOKEN}", 1, "mainnet"],
     [f"https://rinkeby.infura.io/v3/{INFURA_TOKEN}", 4, "rinkeby"],
     ("http://localhost:8545", 8996, "spree"),
-    ("https://rpc-mumbai.matic.today", 80001, "mumbai"),
+    (f"https://polygon-mumbai.infura.io/v3/{INFURA_TOKEN}", 80001, "mumbai"),
     ("https://alfajores-forno.celo-testnet.org", 44787, "celo-alfajores"),
     ("https://baklava-forno.celo-testnet.org", 62320, "celo-baklava")
 ])
