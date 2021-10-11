@@ -79,21 +79,16 @@ class Keeper(object):
             self._external_contract_name_to_instance[name] = contract
             setattr(self, name, contract)
 
-        # make dispenser and token contracts optional
-        try:
-            self.dispenser = Dispenser.get_instance()
-        except FileNotFoundError:
-            self.dispenser = None
+        # optional contracts (contracts that may not exist in certain networks)
+        self.access_proof_template = self._try_optional_contract(AccessProofTemplate)
+        self.access_proof_condition = self._try_optional_contract(AccessProofCondition)
+        self.dispenser = self._try_optional_contract(Dispenser)
+        self.token = self._try_optional_contract(Token)
 
-        try:
-            self.token = Token.get_instance()
-        except FileNotFoundError:
-            self.token = None
-
+        # required contracts
         self.did_registry = DIDRegistry.get_instance()
         self.template_manager = TemplateStoreManager.get_instance()
         self.access_template = AccessTemplate.get_instance()
-        self.access_proof_template = AccessProofTemplate.get_instance()
         self.escrow_compute_execution_template = EscrowComputeExecutionTemplate.get_instance()
         self.agreement_manager = AgreementStoreManager.get_instance()
         self.condition_manager = ConditionStoreManager.get_instance()
@@ -101,7 +96,6 @@ class Keeper(object):
         self.lock_payment_condition = LockPaymentCondition.get_instance()
         self.escrow_payment_condition = EscrowPaymentCondition.get_instance()
         self.access_condition = AccessCondition.get_instance()
-        self.access_proof_condition = AccessProofCondition.get_instance()
         self.nft_access_condition = NFTAccessCondition.get_instance()
         self.compute_execution_condition = ComputeExecutionCondition.get_instance()
         self.hash_lock_condition = HashLockCondition.get_instance()
@@ -258,3 +252,10 @@ class Keeper(object):
     @staticmethod
     def generate_multi_value_hash(types, values):
         return generate_multi_value_hash(types, values)
+
+    @staticmethod
+    def _try_optional_contract(contract):
+        try:
+            return contract.get_instance()
+        except FileNotFoundError:
+            return None

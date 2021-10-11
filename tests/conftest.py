@@ -13,8 +13,10 @@ from tests.resources.helper_functions import (
 
 
 @pytest.fixture(autouse=True)
-def setup_all():
-   setup_keeper()
+def setup_all(request):
+    if 'integration' in request.keywords:
+        return
+    setup_keeper()
 
 
 @pytest.fixture

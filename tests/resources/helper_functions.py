@@ -29,8 +29,7 @@ def setup_keeper():
 
 
 def get_network_name():
-    setup_keeper()
-    return Keeper.get_network_name(Keeper.get_network_id())
+    return Keeper.get_instance().get_network_name(Keeper.get_instance().get_network_id())
 
 
 def get_resource_path(dir_name, file_name):
