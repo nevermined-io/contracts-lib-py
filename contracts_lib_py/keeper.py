@@ -52,6 +52,7 @@ class Keeper(object):
         99: 'POA_Core',
         8995: 'nile',
         8996: 'spree',
+        8997: 'polygon-localnet',
         2199: 'duero',
         0xcea11: 'pacific',
         44787: 'celo-alfajores',
@@ -65,6 +66,19 @@ class Keeper(object):
     def __init__(self, artifacts_path=None, contract_names=None, external_contracts=[]):
         self.network_name = Keeper.get_network_name(Keeper.get_network_id())
         self.artifacts_path = artifacts_path or nevermined_contracts.get_artifacts_path()
+
+        # This api is not provided by polygon
+        # Not sure if it makes sense to use `eth.accounts` since in order to
+        # interact with the accounts in the node we need to be running our own node
+        try:
+            self.accounts = Web3Provider.get_web3().eth.accounts
+        except ValueError as e:
+            # method does not exist or is not available
+            if e.args[0]['code'] == -32601:
+                self.accounts = []
+            else:
+                raise
+
         self.accounts = Web3Provider.get_web3().eth.accounts
         self._contract_name_to_instance = {}
         self._external_contract_name_to_instance = {}
