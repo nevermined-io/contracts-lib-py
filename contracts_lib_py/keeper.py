@@ -79,7 +79,6 @@ class Keeper(object):
             else:
                 raise
 
-        self.accounts = Web3Provider.get_web3().eth.accounts
         self._contract_name_to_instance = {}
         self._external_contract_name_to_instance = {}
         if contract_names:
