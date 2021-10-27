@@ -23,8 +23,8 @@ class ConditionBase(ContractBase):
         """
         values_hash = utils.generate_multi_value_hash(types, values)
         return utils.generate_multi_value_hash(
-            ['bytes32', 'address', 'bytes32'],
-            [agreement_id, self.address, values_hash]
+            ['bytes32', 'uint256', 'bytes32'],
+            [agreement_id, int(self.address,16), values_hash.hex()]
         )
 
     def _fulfill(self, *args, **kwargs):
