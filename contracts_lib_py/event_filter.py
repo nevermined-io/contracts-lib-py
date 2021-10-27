@@ -42,10 +42,26 @@ class EventFilter:
             self._filter.poll_interval = self._poll_interval
 
     def get_new_entries(self, max_tries=1):
-        return self._get_entries(self._filter.get_new_entries, max_tries=max_tries)
+        # This api is not provided by polygon
+        try:
+            return self._get_entries(self._filter.get_new_entries, max_tries=max_tries)
+        except ValueError as e:
+            # method does not exist or is not available
+            if e.args[0]['code'] == -32601:
+                return []
+            else:
+                raise
 
     def get_all_entries(self, max_tries=1):
-        return self._get_entries(self._filter.get_all_entries, max_tries=max_tries)
+         # This api is not provided by polygon
+        try:
+            return self._get_entries(self._filter.get_all_entries, max_tries=max_tries)
+        except ValueError as e:
+            # method does not exist or is not available
+            if e.args[0]['code'] == -32601:
+                return []
+            else:
+                raise
 
     def _get_entries(self, entries_getter, max_tries=1):
         i = 0
