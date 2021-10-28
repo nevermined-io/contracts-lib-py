@@ -9,8 +9,7 @@ from web3 import Web3
 from contracts_lib_py import Keeper
 from contracts_lib_py.contract_handler import ContractHandler
 from contracts_lib_py.didregistry import DIDRegistry
-from contracts_lib_py.web3_provider import Web3Provider
-from tests.resources.helper_functions import get_consumer_account, get_keeper_url, get_publisher_account
+from tests.resources.helper_functions import get_consumer_account, get_publisher_account
 
 
 def new_did():
@@ -165,10 +164,7 @@ def test_grant_permissions():
 
     assert not did_registry.get_permission(asset_id, test_address)
 
-@pytest.mark.xfail(
-    Web3Provider.get_web3(get_keeper_url()).net.version == '8997',
-    reason = "API not available on polygon"
-)
+
 def test_provenance_events():
     register_account = get_publisher_account()
     did_registry = DIDRegistry.get_instance()
@@ -254,10 +250,7 @@ def test_delegate_provenance():
     assert did_registry.is_provenance_delegate(Web3.toBytes(hexstr=asset_id),
                                                delegated_account.address) is False
 
-@pytest.mark.xfail(
-    Web3Provider.get_web3(get_keeper_url()).net.version == '8997',
-    reason = "API not available on polygon"
-)
+
 def test_search_multiple_provenance_event_tests():
     register_account = get_publisher_account()
     did_registry = DIDRegistry.get_instance()
