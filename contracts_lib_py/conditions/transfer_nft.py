@@ -30,6 +30,33 @@ class TransferNFTCondition(ConditionBase):
                       'keyfile': account.key_file}
         )
 
+    def fulfill_for_delegate(self, agreement_id, did, nft_holder_address, receiver_address, nft_amount, lock_cond_id, account):
+        """
+        Fulfill the NFT Holder condition.
+
+        :param agreement_id: id of the agreement, hex str
+        :param did: refers to the DID in which secret store will issue the decryption
+        keys, DID
+        :param nft_holder_address: is the address of the user holding the NFT, str
+        :param receiver_address: is the address of the user to receive the NFT, str
+        :param nft_amount: number of NFTs to hold, str
+        :param lock_cond_id: Lock Condition Identifier, str
+        :param account: Account instance
+        :return: true if the condition was successfully fulfilled, bool
+        """
+        return self._fulfill(
+            agreement_id,
+            did,
+            nft_holder_address,
+            receiver_address,
+            nft_amount,
+            lock_cond_id,
+            method='fulfillForDelegate',
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+
     def hash_values(self, did, nft_holder, receiver_address, nft_amount, lock_cond_id):
         """
         Hast the values of the document_id with the grantee address.
