@@ -30,7 +30,7 @@ jobs:
         git clone https://github.com/nevermined-io/tools nevermined-tools
         cd nevermined-tools
         rm -rf "${HOME}/.nevermined/nevermined-contracts/artifacts"
-        ./start_nevermined.sh --latest --no-marketplace --no-gateway --no-faucet --no-acl-contract ${{ matrix.network }} &
+        ./start_nevermined.sh --no-marketplace --no-gateway --no-faucet --no-acl-contract ${{ matrix.network }} &
         cd ..
         ./scripts/wait_for_migration_and_extract_keeper_artifacts.sh
 
