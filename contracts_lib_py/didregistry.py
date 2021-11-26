@@ -9,6 +9,7 @@ from web3._utils.events import get_event_data
 from contracts_lib_py.contract_base import ContractBase
 from contracts_lib_py.event_filter import EventFilter
 from contracts_lib_py.exceptions import DIDNotFound
+from contracts_lib_py.nft_upgradeable import NFTUpgradeable
 from contracts_lib_py.web3_provider import Web3Provider
 
 logger = logging.getLogger(__name__)
@@ -629,7 +630,8 @@ class DIDRegistry(ContractBase):
         )
         return self.is_tx_successful(tx_hash)
 
-    def is_nft_approved_for_all(self, account, operator):
+    @staticmethod
+    def is_nft_approved_for_all(account, operator):
         """
         Return true if the operator address is ERC1155 approved
 
@@ -637,7 +639,8 @@ class DIDRegistry(ContractBase):
         :param operator: ethereum operator address, hex str
         :return: bool
         """
-        return self.contract.caller.isApprovedForAll(account, operator)
+        nft = NFTUpgradeable.get_instance()
+        return nft.is_approved_for_all(account, operator)
 
     def set_nft_proxy_approval(self, operator, approved, account):
         tx_hash = self.send_transaction(

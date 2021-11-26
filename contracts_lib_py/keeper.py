@@ -23,6 +23,7 @@ from contracts_lib_py.conditions.white_listing import WhitelistingCondition
 from contracts_lib_py.didregistry import DIDRegistry
 from contracts_lib_py.dispenser import Dispenser
 from contracts_lib_py.generic_contract import GenericContract, GenericContractExternal
+from contracts_lib_py.nft_upgradeable import NFTUpgradeable
 from contracts_lib_py.templates.access_template import AccessTemplate
 from contracts_lib_py.templates.access_proof_template import AccessProofTemplate
 from contracts_lib_py.templates.compute_execution_template import EscrowComputeExecutionTemplate
@@ -39,7 +40,7 @@ from contracts_lib_py.web3_provider import Web3Provider
 
 
 class Keeper(object):
-    """The Keeper class aggregates all contracts in the Nevermind Protocol node."""
+    """The Keeper class aggregates all contracts in the Nevermined Protocol node."""
 
     DEFAULT_NETWORK_NAME = 'development'
     _network_name_map = {
@@ -97,6 +98,8 @@ class Keeper(object):
         self.access_proof_condition = self._try_optional_contract(AccessProofCondition)
         self.dispenser = self._try_optional_contract(Dispenser)
         self.token = self._try_optional_contract(Token)
+        self.nft_upgreadeable = self._try_optional_contract(NFTUpgradeable)
+
 
         # required contracts
         self.did_registry = DIDRegistry.get_instance()

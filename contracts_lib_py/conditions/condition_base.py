@@ -7,6 +7,7 @@ from contracts_lib_py.event_filter import EventFilter
 
 logger = logging.getLogger('accessTemplate')
 
+
 class ConditionBase(ContractBase):
     """Base class for all the Condition contract objects."""
     FULFILLED_EVENT = 'Fulfilled'
@@ -24,10 +25,10 @@ class ConditionBase(ContractBase):
         values_hash = utils.generate_multi_value_hash(types, values)
         return utils.generate_multi_value_hash(
             ['bytes32', 'uint256', 'bytes32'],
-            [agreement_id, int(self.address,16), values_hash.hex()]
+            [agreement_id, int(self.address, 16), values_hash.hex()]
         )
 
-    def _fulfill(self, *args, **kwargs):
+    def _fulfill(self, method='fulfill', *args, **kwargs):
         """
         Fulfill the condition.
 
@@ -35,7 +36,7 @@ class ConditionBase(ContractBase):
         :param kwargs:
         :return: true if the condition was successfully fulfilled, bool
         """
-        tx_hash = self.send_transaction('fulfill', args, **kwargs)
+        tx_hash = self.send_transaction(method, args, **kwargs)
         if self.is_tx_successful(tx_hash):
             logger.info('Condition fulfilled successfully')
         else:
