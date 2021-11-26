@@ -41,7 +41,7 @@ class NFTUpgradeable(ContractBase):
 
     def proxy_set_approval_for_all(self, account_address, operator_address, approved, from_account):
         """
-        Configure proxy approval for a specific operator address
+        Configure proxy approval for a specific account and operator address
 
         :param account_address: Address of the account, str
         :param operator_address: Address of the operator, str
