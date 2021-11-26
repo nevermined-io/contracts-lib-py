@@ -98,6 +98,8 @@ class Keeper(object):
         self.access_proof_condition = self._try_optional_contract(AccessProofCondition)
         self.dispenser = self._try_optional_contract(Dispenser)
         self.token = self._try_optional_contract(Token)
+        self.nft_upgreadeable = self._try_optional_contract(NFTUpgradeable)
+
 
         # required contracts
         self.did_registry = DIDRegistry.get_instance()
@@ -122,7 +124,6 @@ class Keeper(object):
         self.nft_access_template = NFTAccessTemplate.get_instance()
         self.did_sales_template = DIDSalesTemplate.get_instance()
         self.nft_sales_template = NFTSalesTemplate.get_instance()
-        self.nft_upgreadeable = NFTUpgradeable.get_instance()
         contracts = [
             self.token,
             self.did_registry,
