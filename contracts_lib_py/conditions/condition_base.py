@@ -28,7 +28,7 @@ class ConditionBase(ContractBase):
             [agreement_id, int(self.address, 16), values_hash.hex()]
         )
 
-    def _fulfill(self, method='fulfill', *args, **kwargs):
+    def _fulfill(self, *args, method='fulfill', **kwargs):
         """
         Fulfill the condition.
 
