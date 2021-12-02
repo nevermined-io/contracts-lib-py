@@ -612,24 +612,6 @@ class DIDRegistry(ContractBase):
         )
         return self.is_tx_successful(tx_hash)
 
-    def balance(self, address, did):
-        return self.contract.caller.balanceOf(address, did)
-
-    def transfer_nft(self, did, address, amount, account):
-        tx_hash = self.send_transaction(
-            'safeTransferFrom',
-            (account.address,
-             address,
-             int(did, 16),
-             amount,
-             Web3.toBytes(text='')
-             ),
-            transact={'from': account.address,
-                      'passphrase': account.password,
-                      'keyfile': account.key_file}
-        )
-        return self.is_tx_successful(tx_hash)
-
     @staticmethod
     def is_nft_approved_for_all(account, operator):
         """

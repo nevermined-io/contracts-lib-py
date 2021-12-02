@@ -9,6 +9,7 @@ from web3 import Web3
 from contracts_lib_py import Keeper
 from contracts_lib_py.contract_handler import ContractHandler
 from contracts_lib_py.didregistry import DIDRegistry
+from contracts_lib_py.nft_upgradeable import NFTUpgradeable
 from tests.resources.helper_functions import get_consumer_account, get_publisher_account
 
 
@@ -354,6 +355,7 @@ def test_get_did():
 def test_nft():
     register_account = get_publisher_account()
     did_registry = DIDRegistry.get_instance()
+    nft_upgradeable = NFTUpgradeable.get_instance()
     w3 = Web3
 
     did_seed = new_did()
@@ -370,18 +372,18 @@ def test_nft():
     assert did_registry.register_mintable_did(did_seed, checksum_test, url, cap, royalties, account=register_account,
                                               providers=[test_address], activity_id=activity_id) is True
 
-    balance = did_registry.balance(register_account.address, asset_id)
+    balance = nft_upgradeable.balance(register_account.address, asset_id)
     assert balance == 0
-    balance_consumer = did_registry.balance(someone_address, asset_id)
+    balance_consumer = nft_upgradeable.balance(someone_address, asset_id)
     assert balance_consumer == 0
 
     did_registry.mint(asset_id, 10, account=register_account)
-    assert balance + 10 == did_registry.balance(register_account.address, asset_id)
-    assert did_registry.transfer_nft(asset_id, someone_address, 1, register_account)
-    assert did_registry.balance(register_account.address, asset_id) == 9
-    assert did_registry.balance(someone_address, asset_id) == balance_consumer + 1
+    assert balance + 10 == nft_upgradeable.balance(register_account.address, asset_id)
+    assert nft_upgradeable.transfer_nft(asset_id, someone_address, 1, register_account)
+    assert nft_upgradeable.balance(register_account.address, asset_id) == 9
+    assert nft_upgradeable.balance(someone_address, asset_id) == balance_consumer + 1
     did_registry.burn(asset_id, 9, account=register_account)
-    assert balance == did_registry.balance(register_account.address, asset_id)
+    assert balance == nft_upgradeable.balance(register_account.address, asset_id)
 
 
 def test_nft_approval():

@@ -98,7 +98,7 @@ class Keeper(object):
         self.access_proof_condition = self._try_optional_contract(AccessProofCondition)
         self.dispenser = self._try_optional_contract(Dispenser)
         self.token = self._try_optional_contract(Token)
-        self.nft_upgreadeable = self._try_optional_contract(NFTUpgradeable)
+        self.nft_upgradeable = self._try_optional_contract(NFTUpgradeable)
 
 
         # required contracts
