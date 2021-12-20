@@ -2,6 +2,7 @@ import os
 import pathlib
 
 from web3 import Web3
+import nevermined_contracts
 
 from contracts_lib_py import Keeper
 from contracts_lib_py.utils import get_account
@@ -23,8 +24,11 @@ def get_keeper_url():
 
 
 def setup_keeper():
-    Web3Provider._web3 = Web3(CustomHTTPProvider(get_keeper_url()))
-    ContractHandler.artifacts_path = os.path.expanduser('~/.nevermined/nevermined-contracts/artifacts')
+    web3 = Web3(CustomHTTPProvider('https://polygon-mumbai.infura.io/v3/eda048626e2745b182f43de61ac70be1'))
+
+    Web3Provider._web3 = web3
+    ContractHandler.artifacts_path = nevermined_contracts.get_artifacts_path()
+    # ContractHandler.artifacts_path = os.path.expanduser('~/.nevermined/nevermined-contracts/artifacts')
     Keeper.get_instance(artifacts_path=ContractHandler.artifacts_path)
 
 
