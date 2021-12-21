@@ -10,6 +10,7 @@ from contracts_lib_py import Keeper
 from contracts_lib_py.contract_handler import ContractHandler
 from contracts_lib_py.didregistry import DIDRegistry
 from contracts_lib_py.nft_upgradeable import NFTUpgradeable
+from contracts_lib_py.utils import get_account
 from tests.resources.helper_functions import get_consumer_account, get_publisher_account
 
 

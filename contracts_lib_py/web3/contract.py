@@ -55,8 +55,24 @@ class CustomContractFunction:
                 tx.pop('passphrase')
             if 'keyfile' in tx:
                 tx.pop('keyfile')
+
             gas = cf.estimateGas(tx)
-            transact_transaction['gas'] = gas
+            # from web3.gas_strategies.rpc import rpc_gas_price_strategy
+            # cf.web3.eth.set_gas_price_strategy(rpc_gas_price_strategy)
+            # gas_price = cf.web3.eth.generate_gas_price(tx)
+
+            nonce = cf.web3.eth.getTransactionCount(transact_transaction['from'])
+
+            # import requests
+            from web3 import Web3
+            # gas = requests.get('https://gasstation-mumbai.matic.today').json()['fast']
+
+
+        transact_transaction['gas'] = gas
+        # transact_transaction['gasPrice'] = gas_price
+        # transact_transaction['nonce'] = nonce + 1000
+        # transact_transaction['maxPriorityFeePerGas'] = Web3.toWei(30, 'gwei')
+        print(gas, Web3.toChecksumAddress(transact_transaction['from']), Web3.toChecksumAddress(transact_transaction['to']))
 
         return transact_with_contract_function(
             cf.address,
