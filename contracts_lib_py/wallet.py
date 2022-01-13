@@ -63,11 +63,11 @@ class Wallet:
         # nonce = Wallet._get_nonce(self._web3, account.address)
         # logger.debug(f'`Wallet` signing tx: sender address: {account.address} nonce: {nonce}, '
         #              f'gasprice: {self._web3.eth.gasPrice}')
-        gas_price = self._web3.eth.max_priority_fee
-        # gas_price = self._web3.eth.gas_price
+        priority_fee = self._web3.eth.max_priority_fee
+        gas_price = self._web3.eth.gas_price
         tx['type'] = 2
         tx['nonce'] = self._web3.eth.getTransactionCount(account.address)
-        tx['maxPriorityFeePerGas'] = gas_price
+        tx['maxPriorityFeePerGas'] = priority_fee
         tx['maxFeePerGas'] = gas_price
         signed_tx = self._web3.eth.account.sign_transaction(tx, private_key)
         logger.debug(f'`Wallet` signed tx is {signed_tx}')
