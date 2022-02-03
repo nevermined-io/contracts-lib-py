@@ -54,7 +54,8 @@ class TransferNFTCondition(ConditionBase):
             method='fulfillForDelegate',
             transact={'from': account.address,
                       'passphrase': account.password,
-                      'keyfile': account.key_file}
+                      'keyfile': account.key_file,
+                      'gas': 1000000}
         )
 
     def hash_values(self, did, nft_holder, receiver_address, nft_amount, lock_cond_id):
