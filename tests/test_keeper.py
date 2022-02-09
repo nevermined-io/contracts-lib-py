@@ -67,8 +67,16 @@ def test_get_network_name():
     assert Keeper.get_network_name(42) == Keeper._network_name_map.get(42)
     assert Keeper.get_network_name(77) == Keeper._network_name_map.get(77)
     assert Keeper.get_network_name(99) == Keeper._network_name_map.get(99)
-    assert Keeper.get_network_name(8995) == Keeper._network_name_map.get(8995)
+    assert Keeper.get_network_name(137) == Keeper._network_name_map.get(137)
     assert Keeper.get_network_name(8996) == Keeper._network_name_map.get(8996)
+    assert Keeper.get_network_name(8997) == Keeper._network_name_map.get(8997)
+    assert Keeper.get_network_name(42220) == Keeper._network_name_map.get(42220)
+    assert Keeper.get_network_name(44787) == Keeper._network_name_map.get(44787)
+    assert Keeper.get_network_name(62320) == Keeper._network_name_map.get(62320)
+    assert Keeper.get_network_name(80001) == Keeper._network_name_map.get(80001)
+    assert Keeper.get_network_name(1313161554) == Keeper._network_name_map.get(1313161554)
+    assert Keeper.get_network_name(1313161555) == Keeper._network_name_map.get(1313161555)
+    assert Keeper.get_network_name(1313161556) == Keeper._network_name_map.get(1313161556)
     assert Keeper.get_network_name(0) == 'development'
 
 
