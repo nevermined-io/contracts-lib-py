@@ -30,6 +30,7 @@ pytestmark = pytest.mark.integration
         "spree/polygon-localnet",
         "mumbai",
         "celo-alfajores",
+        "matic"
 #        "celo-baklava"
     ]
 )
