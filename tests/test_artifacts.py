@@ -20,7 +20,8 @@ pytestmark = pytest.mark.integration
     ("http://localhost:8545", [8996, 8997], ["spree", "polygon-localnet"]),
     (f"https://polygon-mumbai.infura.io/v3/{INFURA_TOKEN}", [80001], ["mumbai"]),
     ("https://alfajores-forno.celo-testnet.org", [44787], ["celo-alfajores"]),
-    (f"https://polygon-mainnet.infura.io/v3/{INFURA_TOKEN}", [137], ["matic"])
+    (f"https://polygon-mainnet.infura.io/v3/{INFURA_TOKEN}", [137], ["matic"]),
+    ("https://forno.celo.org", [42220], ["celo"])
 # Baklava problems...
 #    ("https://baklava-forno.celo-testnet.org", [62320], ["celo-baklava"])
     ],
