@@ -78,3 +78,12 @@ class AgreementStoreManager(ContractBase):
         :return: the length of the agreement list, int
         """
         return self.contract.caller.getAgreementListSize()
+
+    def hash_id(self, did_seed, address):
+        """
+        Calculates the final DID given a DID seed and the publisher address
+        :param did_seed: the hash used to generate the did
+        :param address: the address of the account creating the asset
+        :return: the final DID
+        """
+        return add_0x_prefix(self.contract.caller.agreementId(did_seed, address).hex())

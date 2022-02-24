@@ -59,6 +59,7 @@ class ConditionBase(ContractBase):
         :param kwargs:
         :return:
         """
+        print(args)
         return self.contract.caller.hashValues(*args, **kwargs)
 
     def subscribe_condition_fulfilled(self, agreement_id, timeout, callback, args,

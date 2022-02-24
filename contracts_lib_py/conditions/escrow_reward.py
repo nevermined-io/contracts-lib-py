@@ -10,6 +10,7 @@ class EscrowPaymentCondition(ConditionBase):
                 did,
                 amounts,
                 receivers,
+                return_address,
                 sender_address,
                 token_address,
                 lock_condition_id,
@@ -34,6 +35,7 @@ class EscrowPaymentCondition(ConditionBase):
             did,
             amounts,
             self.to_checksum_addresses(receivers),
+            return_address,
             sender_address,
             self.validate_token_address(token_address),
             lock_condition_id,
@@ -43,7 +45,7 @@ class EscrowPaymentCondition(ConditionBase):
                       'keyfile': account.key_file}
         )
 
-    def hash_values(self, did, amounts, receivers, sender_address, token_address, lock_condition_id,
+    def hash_values(self, did, amounts, receivers, return_address, sender_address, token_address, lock_condition_id,
                     release_condition_id):
         """
         Hash the values of the escrow reward condition.
@@ -61,6 +63,7 @@ class EscrowPaymentCondition(ConditionBase):
             did,
             amounts,
             self.to_checksum_addresses(receivers),
+            return_address,
             sender_address,
             self.validate_token_address(token_address),
             lock_condition_id,

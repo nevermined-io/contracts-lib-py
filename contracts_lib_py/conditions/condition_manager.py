@@ -4,8 +4,7 @@ from contracts_lib_py import ContractBase
 
 ConditionValues = namedtuple(
     'ConditionValues',
-    ('type_ref', 'state', 'time_lock', 'time_out',
-     'block_number', 'created_by', 'last_updated_by', 'block_number_updated')
+    ('type_ref', 'state', 'time_lock', 'time_out', 'block_number')
 )
 
 
@@ -20,7 +19,7 @@ class ConditionStoreManager(ContractBase):
         :return:
         """
         condition = self.contract.caller.getCondition(condition_id)
-        if condition and len(condition) == 8:
+        if condition and len(condition) == 5:
             return ConditionValues(*condition)
 
         return None
