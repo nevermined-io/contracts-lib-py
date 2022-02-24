@@ -26,6 +26,20 @@ class NFTLockCondition(ConditionBase):
                       'keyfile': account.key_file}
         )
 
+    def fulfill_marked(self, agreement_id, document_id, reward_address, amount, receiver, token_address, account):
+        return self._fulfill(
+            agreement_id,
+            document_id,
+            reward_address,
+            amount,
+            receiver,
+            token_address,
+            method='fulfillMarked',
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+
     def hash_values(self, document_id, reward_address, amount):
         """
         Hash the values of the document_id with the reward_address and amount.
@@ -37,3 +51,6 @@ class NFTLockCondition(ConditionBase):
         :return: hex str
         """
         return self._hash_values(document_id, reward_address, amount)
+
+    def hash_values_marked(self, document_id, reward_address, amount, receiver, token_address):
+        return self._hash_values_marked(document_id, reward_address, amount, receiver, token_address)

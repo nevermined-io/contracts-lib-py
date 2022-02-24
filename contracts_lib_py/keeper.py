@@ -11,6 +11,7 @@ from contracts_lib_py.conditions.compute_execution import ComputeExecutionCondit
 from contracts_lib_py.conditions.condition_manager import ConditionStoreManager
 from contracts_lib_py.conditions.escrow_reward import EscrowPaymentCondition
 from contracts_lib_py.conditions.nft_escrow_reward import NFTEscrowPaymentCondition
+from contracts_lib_py.conditions.nft721_escrow_reward import NFT721EscrowPaymentCondition
 from contracts_lib_py.conditions.hash_lock import HashLockCondition
 from contracts_lib_py.conditions.lock_reward import LockPaymentCondition
 from contracts_lib_py.conditions.nft_access import NFTAccessCondition
@@ -27,6 +28,9 @@ from contracts_lib_py.generic_contract import GenericContract, GenericContractEx
 from contracts_lib_py.nft_upgradeable import NFTUpgradeable
 from contracts_lib_py.templates.access_template import AccessTemplate
 from contracts_lib_py.templates.access_proof_template import AccessProofTemplate
+from contracts_lib_py.templates.nft_access_proof_template import NFTAccessProofTemplate
+from contracts_lib_py.templates.nft_access_swap_template import NFTAccessSwapTemplate
+from contracts_lib_py.templates.nft_sales_with_access_template import NFTSalesWithAccessTemplate
 from contracts_lib_py.templates.compute_execution_template import EscrowComputeExecutionTemplate
 from contracts_lib_py.templates.did_sales_template import DIDSalesTemplate
 from contracts_lib_py.templates.nft_access_template import NFTAccessTemplate
@@ -113,6 +117,7 @@ class Keeper(object):
         self.lock_payment_condition = LockPaymentCondition.get_instance()
         self.escrow_payment_condition = EscrowPaymentCondition.get_instance()
         self.nft_escrow_payment_condition = NFTEscrowPaymentCondition.get_instance()
+        self.nft721_escrow_payment_condition = NFT721EscrowPaymentCondition.get_instance()
         self.access_condition = AccessCondition.get_instance()
         self.nft_access_condition = NFTAccessCondition.get_instance()
         self.compute_execution_condition = ComputeExecutionCondition.get_instance()
@@ -124,6 +129,9 @@ class Keeper(object):
         self.transfer_nft_condition = TransferNFTCondition.get_instance()
         self.transfer_did_condition = TransferDIDOwnershipCondition.get_instance()
         self.nft_access_template = NFTAccessTemplate.get_instance()
+        self.nft_access_proof_template = NFTAccessProofTemplate.get_instance()
+        self.nft_access_swap_template = NFTAccessSwapTemplate.get_instance()
+        self.nft_sales_with_access_template = NFTSalesWithAccessTemplate.get_instance()
         self.did_sales_template = DIDSalesTemplate.get_instance()
         self.nft_sales_template = NFTSalesTemplate.get_instance()
         contracts = [
@@ -138,6 +146,8 @@ class Keeper(object):
             self.sign_condition,
             self.lock_payment_condition,
             self.escrow_payment_condition,
+            self.nft_escrow_payment_condition,
+            self.nft721_escrow_payment_condition,
             self.access_condition,
             self.access_proof_condition,
             self.nft_access_condition,
@@ -151,6 +161,9 @@ class Keeper(object):
             self.transfer_did_condition,
             self.nft_access_template,
             self.did_sales_template,
+            self.nft_access_proof_template,
+            self.nft_access_swap_template,
+            self.nft_sales_with_access_template,
             self.nft_sales_template
         ]
         if self.dispenser:

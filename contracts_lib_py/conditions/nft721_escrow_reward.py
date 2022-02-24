@@ -1,7 +1,7 @@
 from contracts_lib_py.conditions.condition_base import ConditionBase
 
 
-class NFTEscrowPaymentCondition(ConditionBase):
+class NFT721EscrowPaymentCondition(ConditionBase):
     """Class representing the EscrowPaymentCondition contract."""
     CONTRACT_NAME = 'NFT721EscrowPaymentCondition'
 
