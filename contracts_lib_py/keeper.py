@@ -52,6 +52,7 @@ class Keeper(object):
         77: 'POA_Sokol',
         99: 'POA_Core',
         137: 'matic',
+        1337: 'geth-localnet',
         8996: 'spree',
         8997: 'polygon-localnet',
         42220: 'celo',
