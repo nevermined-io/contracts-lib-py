@@ -10,6 +10,7 @@ from contracts_lib_py.conditions.access_proof import AccessProofCondition
 from contracts_lib_py.conditions.compute_execution import ComputeExecutionCondition
 from contracts_lib_py.conditions.condition_manager import ConditionStoreManager
 from contracts_lib_py.conditions.escrow_reward import EscrowPaymentCondition
+from contracts_lib_py.conditions.nft_escrow_reward import NFTEscrowPaymentCondition
 from contracts_lib_py.conditions.hash_lock import HashLockCondition
 from contracts_lib_py.conditions.lock_reward import LockPaymentCondition
 from contracts_lib_py.conditions.nft_access import NFTAccessCondition
@@ -111,6 +112,7 @@ class Keeper(object):
         self.sign_condition = SignCondition.get_instance()
         self.lock_payment_condition = LockPaymentCondition.get_instance()
         self.escrow_payment_condition = EscrowPaymentCondition.get_instance()
+        self.nft_escrow_payment_condition = NFTEscrowPaymentCondition.get_instance()
         self.access_condition = AccessCondition.get_instance()
         self.nft_access_condition = NFTAccessCondition.get_instance()
         self.compute_execution_condition = ComputeExecutionCondition.get_instance()

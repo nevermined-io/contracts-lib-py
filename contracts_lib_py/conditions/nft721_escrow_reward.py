@@ -1,15 +1,15 @@
 from contracts_lib_py.conditions.condition_base import ConditionBase
 
 
-class EscrowPaymentCondition(ConditionBase):
+class NFTEscrowPaymentCondition(ConditionBase):
     """Class representing the EscrowPaymentCondition contract."""
-    CONTRACT_NAME = 'EscrowPaymentCondition'
+    CONTRACT_NAME = 'NFT721EscrowPaymentCondition'
 
     def fulfill(self,
                 agreement_id,
                 did,
-                amounts,
-                receivers,
+                amount,
+                receiver,
                 return_address,
                 sender_address,
                 token_address,
@@ -33,8 +33,8 @@ class EscrowPaymentCondition(ConditionBase):
         return self._fulfill(
             agreement_id,
             did,
-            amounts,
-            self.to_checksum_addresses(receivers),
+            amount,
+            receiver,
             return_address,
             sender_address,
             self.validate_token_address(token_address),
@@ -45,34 +45,7 @@ class EscrowPaymentCondition(ConditionBase):
                       'keyfile': account.key_file}
         )
 
-    def fulfill_multi(self,
-                agreement_id,
-                did,
-                amounts,
-                receivers,
-                return_address,
-                sender_address,
-                token_address,
-                lock_condition_id,
-                release_condition_id,
-                account):
-        return self._fulfill(
-            agreement_id,
-            did,
-            amounts,
-            self.to_checksum_addresses(receivers),
-            return_address,
-            sender_address,
-            self.validate_token_address(token_address),
-            lock_condition_id,
-            release_condition_id,
-            method='fulfillMulti',
-            transact={'from': account.address,
-                      'passphrase': account.password,
-                      'keyfile': account.key_file}
-        )
-
-    def hash_values(self, did, amounts, receivers, return_address, sender_address, token_address, lock_condition_id,
+    def hash_values(self, did, amount, receiver, return_address, sender_address, token_address, lock_condition_id,
                     release_condition_id):
         """
         Hash the values of the escrow reward condition.
@@ -88,21 +61,8 @@ class EscrowPaymentCondition(ConditionBase):
         """
         return self._hash_values(
             did,
-            amounts,
-            self.to_checksum_addresses(receivers),
-            return_address,
-            sender_address,
-            self.validate_token_address(token_address),
-            lock_condition_id,
-            release_condition_id
-        )
-
-    def hash_values_multi(self, did, amounts, receivers, return_address, sender_address, token_address, lock_condition_id,
-                    release_condition_id):
-        return self._hash_values_multi(
-            did,
-            amounts,
-            self.to_checksum_addresses(receivers),
+            amount,
+            receiver,
             return_address,
             sender_address,
             self.validate_token_address(token_address),
