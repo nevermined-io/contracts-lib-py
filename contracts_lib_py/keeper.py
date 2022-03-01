@@ -134,6 +134,10 @@ class Keeper(object):
         self.nft_sales_with_access_template = NFTSalesWithAccessTemplate.get_instance()
         self.did_sales_template = DIDSalesTemplate.get_instance()
         self.nft_sales_template = NFTSalesTemplate.get_instance()
+        templates = {}
+        for i in [self.access_template, self.nft_access_template, self.nft_access_proof_template, self.nft_access_swap_template,self.nft_sales_with_access_template, self.did_sales_template, self.nft_sales_template]:
+            templates[i.address] = i
+        self.agreement_manager.set_templates(templates)
         contracts = [
             self.token,
             self.did_registry,
