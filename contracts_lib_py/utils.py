@@ -143,7 +143,6 @@ def get_account(index):
     keyfile_name = 'PARITY_KEYFILE' if not index else f'PARITY_KEYFILE{index}'
 
     address = os.getenv(name)
-    print([address, name])
     if not address:
         return None
 
