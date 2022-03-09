@@ -104,7 +104,11 @@ class Keeper(object):
         self.dispenser = self._try_optional_contract(Dispenser)
         self.token = self._try_optional_contract(Token)
         self.nft_upgradeable = self._try_optional_contract(NFTUpgradeable)
-
+        self.nft_escrow_payment_condition = self._try_optional_contract(NFTEscrowPaymentCondition)
+        self.nft721_escrow_payment_condition = self._try_optional_contract(NFT721EscrowPaymentCondition)
+        self.nft_access_proof_template = self._try_optional_contract(NFTAccessProofTemplate)
+        self.nft_access_swap_template = self._try_optional_contract(NFTAccessSwapTemplate)
+        self.nft_sales_with_access_template = self._try_optional_contract(NFTSalesWithAccessTemplate)
 
         # required contracts
         self.did_registry = DIDRegistry.get_instance()
@@ -116,8 +120,6 @@ class Keeper(object):
         self.sign_condition = SignCondition.get_instance()
         self.lock_payment_condition = LockPaymentCondition.get_instance()
         self.escrow_payment_condition = EscrowPaymentCondition.get_instance()
-        self.nft_escrow_payment_condition = NFTEscrowPaymentCondition.get_instance()
-        self.nft721_escrow_payment_condition = NFT721EscrowPaymentCondition.get_instance()
         self.access_condition = AccessCondition.get_instance()
         self.nft_access_condition = NFTAccessCondition.get_instance()
         self.compute_execution_condition = ComputeExecutionCondition.get_instance()
@@ -129,14 +131,12 @@ class Keeper(object):
         self.transfer_nft_condition = TransferNFTCondition.get_instance()
         self.transfer_did_condition = TransferDIDOwnershipCondition.get_instance()
         self.nft_access_template = NFTAccessTemplate.get_instance()
-        self.nft_access_proof_template = NFTAccessProofTemplate.get_instance()
-        self.nft_access_swap_template = NFTAccessSwapTemplate.get_instance()
-        self.nft_sales_with_access_template = NFTSalesWithAccessTemplate.get_instance()
         self.did_sales_template = DIDSalesTemplate.get_instance()
         self.nft_sales_template = NFTSalesTemplate.get_instance()
         templates = {}
         for i in [self.access_template, self.nft_access_template, self.nft_access_proof_template, self.nft_access_swap_template,self.nft_sales_with_access_template, self.did_sales_template, self.nft_sales_template, self.access_proof_template]:
-            templates[i.address] = i
+            if i != None:
+                templates[i.address] = i
         self.agreement_manager.set_templates(templates)
         contracts = [
             self.token,
