@@ -55,7 +55,6 @@ class AgreementStoreManager(ContractBase):
         event = self.templates[template].subscribe_agreement_created(
             agreement_id, 15, None, (), wait=True, from_block=0
         )
-        print(['event', event])
         agreement = event.args
         did = add_0x_prefix(agreement._did.hex())
         cond_ids = [add_0x_prefix(_id.hex()) for _id in agreement._conditionIds]
