@@ -28,7 +28,6 @@ class LockPaymentCondition(ConditionBase):
             amounts,
             self.to_checksum_addresses(receivers),
             transact={'from': account.address,
-                      'gas': 1000000,
                       'passphrase': account.password,
                       'keyfile': account.key_file}
         )
