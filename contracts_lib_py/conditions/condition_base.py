@@ -79,6 +79,15 @@ class ConditionBase(ContractBase):
         """
         return self.contract.caller.hashValuesMarked(*args, **kwargs)
 
+    def _get_nft_default_address(self, *args, **kwargs):
+        """
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        return self.contract.caller.getNFTDefaultAddress(*args, **kwargs)
+
     def subscribe_condition_fulfilled(self, agreement_id, timeout, callback, args,
                                       timeout_callback=None, wait=False,
                                       from_block=None, to_block=None):

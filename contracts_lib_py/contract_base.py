@@ -92,7 +92,7 @@ class ContractBase(object):
     def validate_token_address(token_address):
         if token_address is None or not Web3.isAddress(token_address):
             return ContractBase.ZERO_ADDRESS
-        return token_address
+        return Web3.toChecksumAddress(token_address)
 
     @staticmethod
     def get_tx_receipt(tx_hash):

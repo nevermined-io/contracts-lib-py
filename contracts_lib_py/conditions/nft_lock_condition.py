@@ -33,7 +33,7 @@ class NFTLockCondition(ConditionBase):
             reward_address,
             amount,
             receiver,
-            token_address,
+            self.validate_token_address(token_address),
             method='fulfillMarked',
             transact={'from': account.address,
                       'passphrase': account.password,
