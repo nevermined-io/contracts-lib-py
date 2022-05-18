@@ -32,7 +32,8 @@ class TransferNFTCondition(ConditionBase):
                       'keyfile': account.key_file}
         )
 
-    def fulfill_for_delegate(self, agreement_id, did, nft_holder_address, receiver_address, nft_amount, lock_cond_id, transfer, account):
+    def fulfill_for_delegate(self, agreement_id, did, nft_holder_address, receiver_address, nft_amount, lock_cond_id,
+                             transfer, account):
         """
         Fulfill the NFT Holder condition.
 
