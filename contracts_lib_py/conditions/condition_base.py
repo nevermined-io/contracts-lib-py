@@ -136,3 +136,4 @@ class ConditionBase(ContractBase):
         )
         event_filter.set_poll_interval(0.5)
         return event_filter
+

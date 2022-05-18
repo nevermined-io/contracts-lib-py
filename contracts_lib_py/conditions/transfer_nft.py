@@ -6,7 +6,7 @@ class TransferNFTCondition(ConditionBase):
     """Class representing the TransferNFTCondition contract."""
     CONTRACT_NAME = 'TransferNFTCondition'
 
-    def fulfill(self, agreement_id, did, receiver_address, nft_amount, lock_cond_id, transfer, account):
+    def fulfill(self, agreement_id, did, receiver_address, nft_amount, lock_cond_id, nft_contract_address, transfer, account):
         """
         Fulfill the NFT Holder condition.
 
@@ -16,6 +16,7 @@ class TransferNFTCondition(ConditionBase):
         :param receiver_address: is the address of the user to receive the NFT, str
         :param nft_amount: number of NFTs to hold, str
         :param lock_cond_id: Lock Condition Identifier, str
+        :param nft_contract_address: The address of the NFT Contract to use, str
         :param transfer if yes it does a transfer if false it mints the NFT, bool
         :param account: Account instance
         :return: true if the condition was successfully fulfilled, bool
@@ -26,6 +27,7 @@ class TransferNFTCondition(ConditionBase):
             receiver_address,
             nft_amount,
             lock_cond_id,
+            nft_contract_address,
             transfer,
             transact={'from': account.address,
                       'passphrase': account.password,
@@ -63,7 +65,7 @@ class TransferNFTCondition(ConditionBase):
                       'gas': 1000000}
         )
 
-    def hash_values(self, did, nft_holder, receiver_address, nft_amount, lock_cond_id, transfer):
+    def hash_values(self, did, nft_holder, receiver_address, nft_amount, lock_cond_id, nft_contract_address, transfer):
         """
         Hast the values of the document_id with the grantee address.
 
@@ -73,10 +75,11 @@ class TransferNFTCondition(ConditionBase):
         :param receiver_address: is the address of the user to receive the NFT, str
         :param nft_amount: number of NFTs, str
         :param lock_cond_id: Lock Condition Identifier, str
+        :param nft_contract_address: The address of the NFT Contract to use
         :param transfer if yes it does a transfer if false it mints the NFT, bool
         :return: hex str
         """
-        return self._hash_values(did, nft_holder, receiver_address, nft_amount, lock_cond_id, transfer)
+        return self._hash_values(did, nft_holder, receiver_address, nft_amount, lock_cond_id, nft_contract_address, transfer)
 
     def get_nft_default_address(self):
         """
@@ -85,3 +88,4 @@ class TransferNFTCondition(ConditionBase):
         :return: nft contract address
         """
         return self._get_nft_default_address()
+
