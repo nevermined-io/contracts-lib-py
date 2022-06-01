@@ -52,6 +52,8 @@ class AgreementStoreManager(ContractBase):
         """
         # get info from events
         template = self.contract.caller.getAgreementTemplate(agreement_id)
+        if template not in self.templates:
+            raise Exception(f'Template with address "{template}" does not exist.')
         event = self.templates[template].subscribe_agreement_created(
             agreement_id, 15, None, (), wait=True, from_block=0
         )
