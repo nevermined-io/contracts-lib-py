@@ -5,51 +5,50 @@ name: Build and Test
 
 on:
   push:
-    branches: [ master, develop ]
+    branches: [master, develop]
   pull_request:
-    branches: [ master, develop ]
+    branches: [master, develop]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         python-version: [3.7]
-        network: ['--spree-embedded-contracts', '--polygon']
+        network: ["--spree-embedded-contracts", "--polygon"]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        docker login -u ${{ secrets.NEVERMINED_DOCKER_USERNAME }} -p ${{ secrets.NEVERMINED_DOCKER_TOKEN}}
-        git clone https://github.com/nevermined-io/tools nevermined-tools
-        cd nevermined-tools
-        rm -rf "${HOME}/.nevermined/nevermined-contracts/artifacts"
-        export KEEPER_VERSION=develop
-        ./start_nevermined.sh --no-marketplace --no-graph --no-gateway --no-faucet --no-acl-contract ${{ matrix.network }} &
-        cd ..
-        ./scripts/wait_for_migration_and_extract_keeper_artifacts.sh
-    - name: Install python package
-      run: |
-        pip install pip==20.2.4
-        pip install -r requirements_dev.txt
-    - name: Unit tests
-      run: |
-        export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
-        export PARITY_PASSWORD=node0
-        export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
-        export INFURA_TOKEN=${{ secrets.INFURA_TOKEN }}
-        pytest -v
-    - name: Integration tests
-      run: |
-        export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
-        export PARITY_PASSWORD=node0
-        export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
-        export INFURA_TOKEN=${{ secrets.INFURA_TOKEN }}
-        pytest -v -m integration
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          docker login -u ${{ secrets.NEVERMINED_DOCKER_USERNAME }} -p ${{ secrets.NEVERMINED_DOCKER_TOKEN}}
+          git clone https://github.com/nevermined-io/tools nevermined-tools
+          cd nevermined-tools
+          rm -rf "${HOME}/.nevermined/nevermined-contracts/artifacts"
+          export KEEPER_VERSION=latest
+          ./start_nevermined.sh --no-marketplace --no-graph --no-gateway --no-faucet --no-acl-contract ${{ matrix.network }} &
+          cd ..
+          ./scripts/wait_for_migration_and_extract_keeper_artifacts.sh
+      - name: Install python package
+        run: |
+          pip install pip==20.2.4
+          pip install -r requirements_dev.txt
+      - name: Unit tests
+        run: |
+          export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
+          export PARITY_PASSWORD=node0
+          export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
+          export INFURA_TOKEN=${{ secrets.INFURA_TOKEN }}
+          pytest -v
+      - name: Integration tests
+        run: |
+          export PARITY_ADDRESS=0x00bd138abd70e2f00903268f3db08f2d25677c9e
+          export PARITY_PASSWORD=node0
+          export PARITY_KEYFILE=tests/resources/data/publisher_key_file.json
+          export INFURA_TOKEN=${{ secrets.INFURA_TOKEN }}
+          pytest -v -m integration
