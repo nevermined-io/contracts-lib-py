@@ -61,6 +61,33 @@ class ConditionBase(ContractBase):
         """
         return self.contract.caller.hashValues(*args, **kwargs)
 
+    def _hash_values_multi(self, *args, **kwargs):
+        """
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        return self.contract.caller.hashValuesMulti(*args, **kwargs)
+
+    def _hash_values_marked(self, *args, **kwargs):
+        """
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        return self.contract.caller.hashValuesMarked(*args, **kwargs)
+
+    def _get_nft_default_address(self, *args, **kwargs):
+        """
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        return self.contract.caller.getNFTDefaultAddress(*args, **kwargs)
+
     def subscribe_condition_fulfilled(self, agreement_id, timeout, callback, args,
                                       timeout_callback=None, wait=False,
                                       from_block=None, to_block=None):
@@ -109,3 +136,4 @@ class ConditionBase(ContractBase):
         )
         event_filter.set_poll_interval(0.5)
         return event_filter
+

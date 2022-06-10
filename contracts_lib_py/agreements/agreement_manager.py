@@ -6,7 +6,7 @@ from contracts_lib_py import ContractBase
 
 AgreementValues = namedtuple(
     'AgreementValues',
-    ('did', 'owner', 'template_id', 'condition_ids', 'updated_by', 'block_number_updated')
+    ('did', 'owner', 'template_id', 'condition_ids', 'condition_id_seeds', 'id_seed')
 )
 
 
@@ -40,6 +40,9 @@ class AgreementStoreManager(ContractBase):
         )
         return self.is_tx_successful(tx_hash)
 
+    def set_templates(self, temp):
+        self.templates = temp
+
     def get_agreement(self, agreement_id):
         """
         Retrieve the agreement for a agreement_id.
@@ -47,22 +50,26 @@ class AgreementStoreManager(ContractBase):
         :param agreement_id: id of the agreement, hex str
         :return: the agreement attributes.
         """
-        agreement = self.contract.caller.getAgreement(agreement_id)
-        if agreement and len(agreement) == 6:
-            agreement = AgreementValues(*agreement)
-            did = add_0x_prefix(agreement.did.hex())
-            cond_ids = [add_0x_prefix(_id.hex()) for _id in agreement.condition_ids]
+        # get info from events
+        template = self.contract.caller.getAgreementTemplate(agreement_id)
+        if template not in self.templates:
+            raise Exception(f'Template with address "{template}" does not exist.')
+        event = self.templates[template].subscribe_agreement_created(
+            agreement_id, 15, None, (), wait=True, from_block=0
+        )
+        agreement = event.args
+        did = add_0x_prefix(agreement._did.hex())
+        cond_ids = [add_0x_prefix(_id.hex()) for _id in agreement._conditionIds]
+        cond_id_seeds = [add_0x_prefix(_id.hex()) for _id in agreement._conditionIdSeeds]
 
-            return AgreementValues(
-                did,
-                agreement.owner,
-                agreement.template_id,
-                cond_ids,
-                agreement.updated_by,
-                agreement.block_number_updated
-            )
-
-        return None
+        return AgreementValues(
+            did,
+            agreement._creator,
+            template,
+            cond_ids,
+            cond_id_seeds,
+            agreement._idSeed
+        )
 
     def get_agreement_did_owner(self, agreement_id):
         """Get the DID owner for this agreement with _id.
@@ -78,3 +85,12 @@ class AgreementStoreManager(ContractBase):
         :return: the length of the agreement list, int
         """
         return self.contract.caller.getAgreementListSize()
+
+    def hash_id(self, did_seed, address):
+        """
+        Calculates the final DID given a DID seed and the publisher address
+        :param did_seed: the hash used to generate the did
+        :param address: the address of the account creating the asset
+        :return: the final DID
+        """
+        return add_0x_prefix(self.contract.caller.agreementId(did_seed, address).hex())

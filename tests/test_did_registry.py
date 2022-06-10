@@ -12,6 +12,7 @@ from contracts_lib_py.didregistry import DIDRegistry
 from contracts_lib_py.nft_upgradeable import NFTUpgradeable
 from tests.resources.helper_functions import get_consumer_account, get_publisher_account
 
+ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 def new_did():
     return uuid.uuid4().hex + uuid.uuid4().hex
@@ -318,9 +319,9 @@ def test_royalties_are_valid():
 
     did_registry.transfer_did_ownership(asset_id, new_owner_address, register_account)
 
-    assert did_registry.are_royalties_valid(asset_id, [80, 20], [someone_address, register_account.address]) is True
-    assert did_registry.are_royalties_valid(asset_id, [90], [someone_address]) is False
-    assert did_registry.are_royalties_valid(asset_id, [90, 10], [someone_address, register_account.address]) is False
+    assert did_registry.are_royalties_valid(asset_id, [80, 20], [someone_address, register_account.address], ZERO_ADDRESS) is True
+    assert did_registry.are_royalties_valid(asset_id, [90], [someone_address], ZERO_ADDRESS) is False
+    assert did_registry.are_royalties_valid(asset_id, [90, 10], [someone_address, register_account.address], ZERO_ADDRESS) is False
 
 
 def test_get_did():
