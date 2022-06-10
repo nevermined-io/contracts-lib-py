@@ -67,10 +67,11 @@ class Wallet:
         try:
             priority_fee = self._web3.eth.max_priority_fee
             gas_price = self._web3.eth.gas_price
+            base_fee = self._web3.eth.get_block("pending")['baseFeePerGas']
             tx['type'] = 2
             tx['nonce'] = self._web3.eth.getTransactionCount(account.address)
             tx['maxPriorityFeePerGas'] = priority_fee
-            tx['maxFeePerGas'] = gas_price
+            tx['maxFeePerGas'] = base_fee*2 + priority_fee
             signed_tx = self._web3.eth.account.sign_transaction(tx, private_key)
         except:
             gas_price = self._web3.eth.gas_price
