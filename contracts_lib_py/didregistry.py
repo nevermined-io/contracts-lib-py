@@ -129,15 +129,16 @@ class DIDRegistry(ContractBase):
         """
         return add_0x_prefix(self.contract.caller.hashDID(did_seed, address).hex())
 
-    def are_royalties_valid(self, did, amounts, receivers):
+    def are_royalties_valid(self, did, amounts, receivers, token_address):
         """
         Validates if asset royalties are valid
         :param did:  Asset did, did
         :param amounts: amounts to distribute
         :param receivers: receivers of the amounts
+        :param token_address: ERC20 token address
         :return: boolean
         """
-        return self.contract.caller.areRoyaltiesValid(did, amounts, receivers)
+        return self.contract.caller.areRoyaltiesValid(did, amounts, receivers, token_address)
 
     def get_block_number_updated(self, did):
         """Return the block number the last did was updated on the block chain."""
