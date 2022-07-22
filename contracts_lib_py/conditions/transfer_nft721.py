@@ -1,9 +1,9 @@
 from contracts_lib_py.conditions.condition_base import ConditionBase
 
 
-class TransferNFTCondition(ConditionBase):
+class TransferNFT721Condition(ConditionBase):
     """Class representing the TransferNFTCondition contract."""
-    CONTRACT_NAME = 'TransferNFTCondition'
+    CONTRACT_NAME = 'TransferNFT721Condition'
 
     def fulfill(self, agreement_id, did, receiver_address, nft_amount, lock_cond_id, nft_contract_address, transfer, account):
         """
@@ -34,7 +34,7 @@ class TransferNFTCondition(ConditionBase):
         )
 
     def fulfill_for_delegate(self, agreement_id, did, nft_holder_address, receiver_address, nft_amount, lock_cond_id,
-                             transfer, account):
+                             transfer, nft_contract_address, duration, account):
         """
         Fulfill the NFT Holder condition.
 
@@ -46,9 +46,14 @@ class TransferNFTCondition(ConditionBase):
         :param nft_amount: number of NFTs to hold, str
         :param lock_cond_id: Lock Condition Identifier, str
         :param transfer if yes it does a transfer if false it mints the NFT, bool
+        :param nft_contract_address the address of the ERC-721
+        :param duration number of blocks of duration of the subscription, int
         :param account: Account instance
         :return: true if the condition was successfully fulfilled, bool
         """
+
+        if duration > 0:
+            duration = duration + Web3Provider.get_web3().eth.get_block_number()
         return self._fulfill(
             agreement_id,
             did,
@@ -57,6 +62,8 @@ class TransferNFTCondition(ConditionBase):
             nft_amount,
             lock_cond_id,
             transfer,
+            nft_contract_address,
+            duration,
             method='fulfillForDelegate',
             transact={'from': account.address,
                       'passphrase': account.password,
