@@ -21,11 +21,13 @@ from contracts_lib_py.conditions.sign import SignCondition
 from contracts_lib_py.conditions.threshold import ThresholdCondition
 from contracts_lib_py.conditions.transfer_did import TransferDIDOwnershipCondition
 from contracts_lib_py.conditions.transfer_nft import TransferNFTCondition
+from contracts_lib_py.conditions.transfer_nft721 import TransferNFT721Condition
 from contracts_lib_py.conditions.white_listing import WhitelistingCondition
 from contracts_lib_py.didregistry import DIDRegistry
 from contracts_lib_py.dispenser import Dispenser
 from contracts_lib_py.generic_contract import GenericContract, GenericContractExternal
 from contracts_lib_py.nft_upgradeable import NFTUpgradeable
+from contracts_lib_py.nft721_upgradeable import NFT721Upgradeable
 from contracts_lib_py.templates.access_template import AccessTemplate
 from contracts_lib_py.templates.access_proof_template import AccessProofTemplate
 from contracts_lib_py.templates.nft_access_proof_template import NFTAccessProofTemplate
@@ -104,6 +106,7 @@ class Keeper(object):
         self.dispenser = self._try_optional_contract(Dispenser)
         self.token = self._try_optional_contract(Token)
         self.nft_upgradeable = self._try_optional_contract(NFTUpgradeable)
+        self.nft721_upgradeable = self._try_optional_contract(NFT721Upgradeable)
         self.nft_escrow_payment_condition = self._try_optional_contract(NFTEscrowPaymentCondition)
         self.nft721_escrow_payment_condition = self._try_optional_contract(NFT721EscrowPaymentCondition)
         self.nft_access_proof_template = self._try_optional_contract(NFTAccessProofTemplate)
@@ -129,6 +132,7 @@ class Keeper(object):
         self.nft_holder_condition = NFTHolderCondition.get_instance()
         self.nft_lock_condition = NFTLockCondition.get_instance()
         self.transfer_nft_condition = TransferNFTCondition.get_instance()
+        self.transfer_nft721_condition = TransferNFT721Condition.get_instance()
         self.transfer_did_condition = TransferDIDOwnershipCondition.get_instance()
         self.nft_access_template = NFTAccessTemplate.get_instance()
         self.did_sales_template = DIDSalesTemplate.get_instance()
@@ -162,6 +166,7 @@ class Keeper(object):
             self.nft_holder_condition,
             self.nft_lock_condition,
             self.transfer_nft_condition,
+            self.transfer_nft721_condition,
             self.transfer_did_condition,
             self.nft_access_template,
             self.did_sales_template,

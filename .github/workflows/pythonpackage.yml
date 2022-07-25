@@ -31,9 +31,9 @@ jobs:
           cd nevermined-tools
           rm -rf "${HOME}/.nevermined/nevermined-contracts/artifacts"
           export KEEPER_VERSION=latest
-          ./start_nevermined.sh --no-marketplace --no-graph --no-gateway --no-faucet --no-acl-contract ${{ matrix.network }} &
+          ./start_nevermined.sh --latest --no-marketplace --no-graph --no-gateway --no-faucet --no-acl-contract ${{ matrix.network }} &
           cd ..
-          ./scripts/wait_for_migration_and_extract_keeper_artifacts.sh
+          ./scripts/wait-nevermined.sh
       - name: Install python package
         run: |
           pip install pip==20.2.4

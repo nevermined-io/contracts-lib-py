@@ -54,8 +54,28 @@ class DIDRegistry(ContractBase):
                              cap=cap, royalties=royalties, attributes=attributes,
                              providers=providers, activity_id=activity_id)
 
+    def register_mintable_did721(self, did_seed, checksum, url, royalties, account, providers=None, activity_id=None,
+                                 nft_metadata=None):
+        """
+        Register a mintable DID using the DIDRegistry smart contract.
+
+        :param did_seed: Seed used to generate the final DID, It's a 32 byte or hexstring
+        :param checksum: hex str hash of TODO
+        :param url: URL of the resolved DID
+        :param account: instance of Account to use to register/update the DID
+        :param royalties: refers to the royalties to reward to the DID creator in the secondary market
+        :param providers: list of addresses of providers to be allowed to serve the asset and play
+            a part in creating and fulfilling service agreements
+        :param activity_id: id of the activity tracked in the provenance.
+        :param nft_metadatga: url to NFT metadata information
+        :return: Receipt
+        """
+        return self.register(did_seed, checksum, url, account,
+                             royalties=royalties, providers=providers,
+                             activity_id=activity_id, nft_type='721')
+
     def register(self, did_seed, checksum, url, account, providers=None, activity_id=None,
-                 attributes=None, cap=None, royalties=None):
+                 attributes=None, cap=None, royalties=None, nft_metatada=None, nft_type=None):
         """
         Register or update a DID on the block chain using the DIDRegistry smart contract.
 
@@ -101,9 +121,14 @@ class DIDRegistry(ContractBase):
             raise ValueError('You must provide an account to use to register a DID')
 
         if cap is not None or royalties is not None:
-            transaction = self._register_mintable_did(
-                did_source_id, checksum, providers or [], url, account, cap, royalties, activity_id, attributes
-            )
+            if nft_type == '721':
+                transaction = self._register_mintable_did721(
+                    did_source_id, checksum, providers or [], url, account, royalties, activity_id, nft_metatada
+                )
+            else:
+                transaction = self._register_mintable_did(
+                    did_source_id, checksum, providers or [], url, account, cap, royalties, activity_id, attributes
+                )
         else:
             transaction = self._register_did(
                 did_source_id, checksum, providers or [], url, account, activity_id, attributes
@@ -401,6 +426,24 @@ class DIDRegistry(ContractBase):
                       'keyfile': account.key_file}
         )
 
+    def _register_mintable_did721(self, did, checksum, providers, url, account, royalties, activity_id=None,
+                                  nft_metadata=None):
+        assert isinstance(providers, list), ''
+        return self.send_transaction(
+            'registerMintableDID721',
+            (did,
+             checksum,
+             providers,
+             url,
+             royalties,
+             False,
+             activity_id or '',
+             nft_metadata or ''),
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+
     def used(self, prov_id, did, agent_id, activity_id, signature, account, attributes=None):
         tx_hash = self.send_transaction(
             'used',
@@ -613,6 +656,29 @@ class DIDRegistry(ContractBase):
         )
         return self.is_tx_successful(tx_hash)
 
+
+    def mint721(self, did, receiver, account):
+        tx_hash = self.send_transaction(
+            'mint721',
+            (did, receiver),
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+
+        return self.is_tx_successful(tx_hash)
+
+    def burn721(self, did, account):
+        tx_hash = self.send_transaction(
+            'burn721',
+            (did),
+            transact={'from': account.address,
+                      'passphrase': account.password,
+                      'keyfile': account.key_file}
+        )
+        return self.is_tx_successful(tx_hash)
+
+
     @staticmethod
     def is_nft_approved_for_all(account, operator):
         """
@@ -624,6 +690,20 @@ class DIDRegistry(ContractBase):
         """
         nft = NFTUpgradeable.get_instance()
         return nft.is_approved_for_all(account, operator)
+
+    def get_erc721_address(self):
+        """
+        Return the erc721 contract address
+        :return: str
+        """
+        return self.contract.caller.erc721()
+
+    def get_erc1155_address(self):
+        """
+        Return the erc1155 contract address
+        :return: str
+        """
+        return self.contract.caller.erc1155()
 
     def set_nft_proxy_approval(self, operator, approved, account):
         tx_hash = self.send_transaction(
