@@ -1,5 +1,5 @@
 from contracts_lib_py.conditions.condition_base import ConditionBase
-
+from contracts_lib_py.web3_provider import Web3Provider
 
 class TransferNFT721Condition(ConditionBase):
     """Class representing the TransferNFTCondition contract."""
@@ -71,7 +71,7 @@ class TransferNFT721Condition(ConditionBase):
                       'gas': 1000000}
         )
 
-    def hash_values(self, did, nft_holder, receiver_address, nft_amount, lock_cond_id, nft_contract_address, transfer):
+    def hash_values(self, did, nft_holder, receiver_address, nft_amount, lock_cond_id, nft_contract_address, transfer_nft):
         """
         Hast the values of the document_id with the grantee address.
 
@@ -82,10 +82,10 @@ class TransferNFT721Condition(ConditionBase):
         :param nft_amount: number of NFTs, str
         :param lock_cond_id: Lock Condition Identifier, str
         :param nft_contract_address: The address of the NFT Contract to use
-        :param transfer if yes it does a transfer if false it mints the NFT, bool
+        :param transfer_nft if yes it does a transfer if false it mints the NFT, bool
         :return: hex str
         """
-        return self._hash_values(did, nft_holder, receiver_address, nft_amount, lock_cond_id, nft_contract_address, transfer)
+        return self._hash_values(did, nft_holder, receiver_address, nft_amount, lock_cond_id, nft_contract_address, transfer_nft)
 
     def get_nft_default_address(self):
         """

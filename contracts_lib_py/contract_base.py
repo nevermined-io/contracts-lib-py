@@ -3,6 +3,7 @@
 
     All keeper contract inherit from this base class
 """
+import json
 import logging
 
 from web3 import Web3
@@ -113,9 +114,26 @@ class ContractBase(object):
 
         return tx_receipt
 
-    def is_tx_successful(self, tx_hash):
+    def is_tx_successful(self, tx_hash, get_revert_message=False):
         receipt = self.get_tx_receipt(tx_hash)
-        return bool(receipt and receipt.status == 1)
+        is_successful = bool(receipt and receipt.status == 1)
+        if is_successful:
+            return True
+        else:
+            if get_revert_message:
+                try:
+                    tx = Web3Provider.get_web3().eth.get_transaction(tx_hash)
+                    replay_tx = {
+                        'to': tx['to'],
+                        'from': tx['from'],
+                        'value': tx['value'],
+                        'data': tx['input'],
+                    }
+    
+                    Web3Provider.get_web3().eth.call(replay_tx, tx.blockNumber - 1)                
+                except Exception as e:                
+                    logger.error(e)
+        return False
 
     def subscribe_to_event(self, event_name, timeout, event_filter, callback=None,
                            timeout_callback=None, args=None, wait=False,

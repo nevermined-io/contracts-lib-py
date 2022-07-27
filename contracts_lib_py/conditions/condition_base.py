@@ -4,6 +4,7 @@ from web3 import Web3
 
 from contracts_lib_py import ContractBase, utils
 from contracts_lib_py.event_filter import EventFilter
+from contracts_lib_py.web3_provider import Web3Provider
 
 logger = logging.getLogger('accessTemplate')
 
