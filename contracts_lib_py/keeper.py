@@ -37,6 +37,7 @@ from contracts_lib_py.templates.compute_execution_template import EscrowComputeE
 from contracts_lib_py.templates.did_sales_template import DIDSalesTemplate
 from contracts_lib_py.templates.nft_access_template import NFTAccessTemplate
 from contracts_lib_py.templates.nft_sales_template import NFTSalesTemplate
+from contracts_lib_py.templates.nft721_sales_template import NFT721SalesTemplate
 from contracts_lib_py.templates.template_manager import TemplateStoreManager
 from contracts_lib_py.token import Token
 from contracts_lib_py.utils import (add_ethereum_prefix_and_hash_msg, generate_multi_value_hash,
@@ -137,8 +138,9 @@ class Keeper(object):
         self.nft_access_template = NFTAccessTemplate.get_instance()
         self.did_sales_template = DIDSalesTemplate.get_instance()
         self.nft_sales_template = NFTSalesTemplate.get_instance()
+        self.nft721_sales_template = NFT721SalesTemplate.get_instance()
         templates = {}
-        for i in [self.access_template, self.nft_access_template, self.nft_access_proof_template, self.nft_access_swap_template,self.nft_sales_with_access_template, self.did_sales_template, self.nft_sales_template, self.access_proof_template, self.escrow_compute_execution_template]:
+        for i in [self.access_template, self.nft_access_template, self.nft_access_proof_template, self.nft_access_swap_template,self.nft_sales_with_access_template, self.did_sales_template, self.nft_sales_template, self.nft721_sales_template, self.access_proof_template, self.escrow_compute_execution_template]:
             if i != None:
                 templates[i.address] = i
         self.agreement_manager.set_templates(templates)
@@ -173,7 +175,8 @@ class Keeper(object):
             self.nft_access_proof_template,
             self.nft_access_swap_template,
             self.nft_sales_with_access_template,
-            self.nft_sales_template
+            self.nft_sales_template,
+            self.nft721_sales_template
         ]
         if self.dispenser:
             contracts.append(self.dispenser)
