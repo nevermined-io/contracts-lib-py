@@ -19,7 +19,7 @@ with open('CHANGELOG.md') as history_file:
 install_requirements = [
     'nevermined-contracts==2.0.3',
     'web3==5.26.0',
-    'requests==2.21.0',
+    'requests==2.31.0',
 ]
 
 # Required to run setup.py:
